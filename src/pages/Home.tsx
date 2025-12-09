@@ -214,7 +214,7 @@ const Home: React.FC = () => {
           ))}
         </div>
       </section>
-      
+
       {/* Newsletter Section */}
       <section className='container-custom'>
         <div className='bg-linear-to-r from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12'>
