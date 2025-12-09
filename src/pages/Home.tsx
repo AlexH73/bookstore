@@ -4,7 +4,6 @@ import {
   Star,
   FavoriteBorder,
   LocalFireDepartment,
-  TrendingUp,
   AddShoppingCart,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -70,7 +69,7 @@ const Home: React.FC = () => {
   return (
     <div className='space-y-12 md:space-y-16'>
       {/* Hero Section */}
-      <section className='relative rounded-2xl overflow-hidden bg-gradient-to-r from-primary to-blue-900 text-white pl-10'>
+      <section className='relative rounded-2xl overflow-hidden bg-linear-to-r from-primary to-blue-900 text-white pl-10'>
         <div className='container-custom py-16 md:py-24'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
             <div>
@@ -215,10 +214,10 @@ const Home: React.FC = () => {
           ))}
         </div>
       </section>
-
+      
       {/* Newsletter Section */}
       <section className='container-custom'>
-        <div className='bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12'>
+        <div className='bg-linear-to-r from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
             <div>
               <h2 className='text-3xl font-bold mb-4'>Stay Updated</h2>
@@ -231,7 +230,7 @@ const Home: React.FC = () => {
                 <input
                   type='email'
                   placeholder='Your email address'
-                  className='flex-grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
+                  className='grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
                 />
                 <button className='btn-secondary px-6 py-3 whitespace-nowrap'>
                   Subscribe
