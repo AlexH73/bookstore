@@ -11,7 +11,7 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  // Validācijas funkcija
+ 
   const validateForm = () => {
     if (!email || !password || !confirmPassword) {
       setError("All fields are required");
@@ -46,13 +46,11 @@ export default function Register() {
 
     if (!validateForm()) return;
 
-    // Reģistrācija ar AuthContext
+   
     register(email, password);
 
-    // Navigācija uz dashboard
     navigate("/dashboard");
 
-    // Reset form
     setEmail("");
     setPassword("");
     setConfirmPassword("");
