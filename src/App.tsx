@@ -2,11 +2,13 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
+import { useThemeMode } from './features/theme/useThemeMode';
 // import Catalog from './pages/Catalog';
 // import Cart from './pages/Cart';
 // import Checkout from './pages/Checkout';
 
 const App: React.FC = () => {
+  useThemeMode(); 
   return (
     <Routes>
       <Route path='/' element={<Layout />}>

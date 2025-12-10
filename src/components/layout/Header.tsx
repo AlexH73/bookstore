@@ -9,35 +9,74 @@ import {
   LocalShipping,
   ArrowDropDown,
 } from '@mui/icons-material';
+import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { translations } from '../../features/language/translations';
+import { setLanguage } from '../../features/language/languageSlice';
+import ThemeToggle from '../ui/ThemeToggle';
+import Logo from '../ui/Logo';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  ) as Language;
+  const t = translations[currentLanguage];
+  type Language = 'en' | 'de' | 'ru';
+
+  const handleLanguageChange = (lang: Language) => {
+    dispatch(setLanguage(lang));
+  };
+
   const navigationItems = [
-    { label: 'Bestseller', path: '/bestseller' },
-    { label: 'Fiction', path: '/fiction' },
-    { label: 'Non-Fiction', path: '/non-fiction' },
-    { label: 'Children', path: '/children' },
-    { label: 'eBooks', path: '/ebooks' },
-    { label: 'Audio Books', path: '/audio' },
-    { label: 'Gifts', path: '/gifts' },
-    { label: 'Sale', path: '/sale' },
+    { label: t.nav.bestseller, path: '/bestseller' },
+    { label: t.nav.fiction, path: '/fiction' },
+    { label: t.nav.children, path: '/children' },
+    { label: t.nav.audioBooks, path: '/audio' },
+    { label: t.nav.gifts, path: '/gifts' },
+    { label: t.nav.sale, path: '/sale' },
   ];
 
   return (
     <>
       {/* Top Promo Bar */}
-      <div className='bg-primary text-white py-2 px-10'>
+      <div className='bg-primary text-gray-400 py-2 px-10'>
         <div className='container-custom flex justify-between items-center'>
           <div className='flex items-center gap-2 text-sm'>
             <LocalShipping className='w-4 h-4' />
-            <span>Free shipping on orders over €25</span>
+            <span>{t.promo}</span>
           </div>
-          <div className='hidden md:flex gap-4 text-sm'>
-            <span>Store Locator</span>
-            <span>Help & Contact</span>
+          <div className='hidden md:flex items-center gap-4 text-sm'>
+            <span>{t.storeLocator}</span>
+            <span>{t.helpContact}</span>
+
+            {/* Theme toggle */}
+            <ThemeToggle />
+
+            {/* Language Switcher */}
+            <ToggleButtonGroup
+              color='primary'
+              value={currentLanguage}
+              exclusive
+              onChange={(_, newLang) => {
+                if (newLang !== null) handleLanguageChange(newLang as Language);
+              }}
+              aria-label='Language switcher'
+            >
+              <ToggleButton className='py-1! px-2! text-s!' value='en'>
+                EN
+              </ToggleButton>
+              <ToggleButton className='py-1! px-2! text-s!' value='de'>
+                DE
+              </ToggleButton>
+              <ToggleButton className='py-1! px-2! text-s!' value='ru'>
+                RU
+              </ToggleButton>
+            </ToggleButtonGroup>
           </div>
         </div>
       </div>
@@ -47,7 +86,7 @@ const Header: React.FC = () => {
         <div className='container-custom'>
           <div className='flex flex-col md:flex-row gap-4 py-4'>
             {/* Top Row */}
-            <div className='flex w-full items-center justify-between'>
+            <div className='flex w-full items-center justify-between text-xs'>
               {/* Left: Menu & Logo */}
               <div className='flex items-center gap-4 md:gap-8'>
                 <button
@@ -56,11 +95,11 @@ const Header: React.FC = () => {
                 >
                   <MenuIcon />
                 </button>
-
-                <Link to='/' className='flex items-center gap-2 no-underline'>
-                  <h1 className='text-2xl font-bold text-primary font-serif'>
-                    BookStore
-                  </h1>
+                <Link
+                  to='/'
+                  className='flex items-center gap-2 no-underline pl-4'
+                >
+                  <Logo />
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -75,7 +114,7 @@ const Header: React.FC = () => {
                     </Link>
                   ))}
                   <button className='flex items-center gap-1 text-gray-700 hover:text-primary'>
-                    More <ArrowDropDown />
+                    {t.more} <ArrowDropDown />
                   </button>
                 </nav>
               </div>
@@ -90,7 +129,7 @@ const Header: React.FC = () => {
                     </div>
                     <input
                       type='text'
-                      placeholder='Search books, authors, ISBN...'
+                      placeholder={t.searchPlaceholder}
                       className='w-full pl-10 pr-4 py-2 bg-transparent outline-none'
                     />
                   </div>
@@ -136,7 +175,7 @@ const Header: React.FC = () => {
                   </div>
                   <input
                     type='text'
-                    placeholder='Search books, authors, ISBN...'
+                    placeholder={t.searchPlaceholder}
                     className='w-full pl-10 pr-4 py-2 bg-transparent outline-none'
                     autoFocus
                   />
@@ -145,7 +184,7 @@ const Header: React.FC = () => {
             )}
 
             {/* Bottom Row: Desktop Extended Navigation */}
-            <div className='hidden md:flex w-full items-center justify-between pt-4'>
+            <div className='hidden md:flex w-full justify-end items-center gap-6 pt-4 text-xs'>
               <nav className='flex gap-6'>
                 {navigationItems.slice(4).map((item) => (
                   <Link
@@ -159,8 +198,10 @@ const Header: React.FC = () => {
               </nav>
 
               <div className='flex items-center gap-4'>
-                <span className='text-gray-600'>New Releases</span>
-                <button className='btn-secondary px-4 py-2'>Subscribe</button>
+                <span className='text-gray-600'>{t.newReleases}</span>
+                <button className='btn-secondary px-4 py-2'>
+                  {t.subscribe}
+                </button>
               </div>
             </div>
           </div>
@@ -178,7 +219,7 @@ const Header: React.FC = () => {
             {/* Drawer */}
             <div className='absolute left-0 top-0 h-full w-64 bg-white shadow-xl'>
               <div className='flex items-center justify-between p-4 border-b'>
-                <h2 className='text-xl font-bold text-primary'>Menu</h2>
+                <h2 className='text-xl font-bold text-primary'>{t.menu}</h2>
                 <button onClick={() => setMobileOpen(false)}>
                   <Close />
                 </button>
