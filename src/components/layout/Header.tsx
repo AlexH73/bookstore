@@ -14,7 +14,6 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { translations } from '../../language/translations';
 import { setLanguage } from '../../language/languageSlice';
-import Button from '../ui/Button';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
