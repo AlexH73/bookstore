@@ -10,20 +10,34 @@ import {
   ArrowDropDown,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { translations } from '../../language/translations';
+import { setLanguage } from '../../language/languageSlice';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  ) as Language;
+  const t = translations[currentLanguage];  type Language = 'en' | 'de' | 'ru';
+  
+
+  const handleLanguageChange = (lang: Language) => {
+    dispatch(setLanguage(lang));
+  };
+
   const navigationItems = [
-    { label: 'Bestseller', path: '/bestseller' },
-    { label: 'Fiction', path: '/fiction' },
-    { label: 'Non-Fiction', path: '/non-fiction' },
-    { label: 'Children', path: '/children' },
-    { label: 'eBooks', path: '/ebooks' },
-    { label: 'Audio Books', path: '/audio' },
-    { label: 'Gifts', path: '/gifts' },
-    { label: 'Sale', path: '/sale' },
+    { label: t.nav.bestseller, path: '/bestseller' },
+    { label: t.nav.fiction, path: '/fiction' },
+    { label: t.nav.nonFiction, path: '/non-fiction' },
+    { label: t.nav.children, path: '/children' },
+    { label: t.nav.ebooks, path: '/ebooks' },
+    { label: t.nav.audioBooks, path: '/audio' },
+    { label: t.nav.gifts, path: '/gifts' },
+    { label: t.nav.sale, path: '/sale' },
   ];
 
   return (
@@ -33,11 +47,31 @@ const Header: React.FC = () => {
         <div className='container-custom flex justify-between items-center'>
           <div className='flex items-center gap-2 text-sm'>
             <LocalShipping className='w-4 h-4' />
-            <span>Free shipping on orders over €25</span>
+            <span>{t.promo}</span>
           </div>
-          <div className='hidden md:flex gap-4 text-sm'>
-            <span>Store Locator</span>
-            <span>Help & Contact</span>
+          <div className='hidden md:flex items-center gap-4 text-sm'>
+            <span>{t.storeLocator}</span>
+            <span>{t.helpContact}</span>
+            {/* Language Switcher */}
+            <div className='flex gap-2'>
+              {(['en', 'de', 'ru'] as Language[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => handleLanguageChange(lang)}
+                  className={`uppercase font-medium ${
+                    currentLanguage === lang
+                      ? 'text-black'
+                      : 'text-gray-300'
+                  }`}
+                  disabled={currentLanguage === lang}
+                  style={{
+                    cursor: currentLanguage === lang ? 'default' : 'pointer',
+                  }}
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -75,7 +109,7 @@ const Header: React.FC = () => {
                     </Link>
                   ))}
                   <button className='flex items-center gap-1 text-gray-700 hover:text-primary'>
-                    More <ArrowDropDown />
+                    {t.more} <ArrowDropDown />
                   </button>
                 </nav>
               </div>
@@ -90,7 +124,7 @@ const Header: React.FC = () => {
                     </div>
                     <input
                       type='text'
-                      placeholder='Search books, authors, ISBN...'
+                      placeholder={t.searchPlaceholder}
                       className='w-full pl-10 pr-4 py-2 bg-transparent outline-none'
                     />
                   </div>
@@ -136,7 +170,7 @@ const Header: React.FC = () => {
                   </div>
                   <input
                     type='text'
-                    placeholder='Search books, authors, ISBN...'
+                    placeholder={t.searchPlaceholder}
                     className='w-full pl-10 pr-4 py-2 bg-transparent outline-none'
                     autoFocus
                   />
@@ -159,8 +193,8 @@ const Header: React.FC = () => {
               </nav>
 
               <div className='flex items-center gap-4'>
-                <span className='text-gray-600'>New Releases</span>
-                <button className='btn-secondary px-4 py-2'>Subscribe</button>
+                <span className='text-gray-600'>{t.newReleases}</span>
+                <button className='btn-secondary px-4 py-2'>{t.subscribe}</button>
               </div>
             </div>
           </div>
@@ -178,7 +212,7 @@ const Header: React.FC = () => {
             {/* Drawer */}
             <div className='absolute left-0 top-0 h-full w-64 bg-white shadow-xl'>
               <div className='flex items-center justify-between p-4 border-b'>
-                <h2 className='text-xl font-bold text-primary'>Menu</h2>
+                <h2 className='text-xl font-bold text-primary'>{t.menu}</h2>
                 <button onClick={() => setMobileOpen(false)}>
                   <Close />
                 </button>

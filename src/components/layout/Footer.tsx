@@ -1,22 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
+import { translations } from '../../language/translations';
 
 const Footer: React.FC = () => {
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translations[currentLanguage].footer;
+
   const footerLinks = {
-    Shop: [
-      { label: 'All Books', path: '/catalog' },
-      { label: 'New Releases', path: '/new' },
-      { label: 'Bestsellers', path: '/bestsellers' },
+    [t.links.shop.title]: [
+      { label: t.links.shop.allBooks, path: '/catalog' },
+      { label: t.links.shop.newReleases, path: '/new' },
+      { label: t.links.shop.bestsellers, path: '/bestsellers' },
     ],
-    Help: [
-      { label: 'Contact Us', path: '/contact' },
-      { label: 'Shipping', path: '/shipping' },
-      { label: 'Returns', path: '/returns' },
+    [t.links.help.title]: [
+      { label: t.links.help.contactUs, path: '/contact' },
+      { label: t.links.help.shipping, path: '/shipping' },
+      { label: t.links.help.returns, path: '/returns' },
     ],
-    Company: [
-      { label: 'About Us', path: '/about' },
-      { label: 'Careers', path: '/careers' },
-      { label: 'Privacy Policy', path: '/privacy' },
+    [t.links.company.title]: [
+      { label: t.links.company.aboutUs, path: '/about' },
+      { label: t.links.company.careers, path: '/careers' },
+      { label: t.links.company.privacyPolicy, path: '/privacy' },
     ],
   };
 
@@ -27,10 +34,7 @@ const Footer: React.FC = () => {
           {/* Logo and Description */}
           <div className='md:col-span-1'>
             <h2 className='text-2xl font-bold mb-4'>BookStore</h2>
-            <p className='text-gray-400'>
-              Your favorite online bookstore. Discover millions of books with
-              free shipping worldwide.
-            </p>
+            <p className='text-gray-400'>{t.description}</p>
           </div>
 
           {/* Footer Links */}
@@ -56,7 +60,7 @@ const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className='border-t border-gray-800 mt-8 pt-8 text-center text-gray-400'>
           <p>
-            &copy; {new Date().getFullYear()} BookStore. All rights reserved.
+            &copy; {new Date().getFullYear()} BookStore. {t.rights}
           </p>
         </div>
       </div>
