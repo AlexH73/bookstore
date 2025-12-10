@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
-import { translations } from '../../language/translations';
+import { translations } from '../../features/language/translations';
 
 const Footer: React.FC = () => {
   const currentLanguage = useAppSelector(

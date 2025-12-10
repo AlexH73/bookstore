@@ -12,9 +12,10 @@ import {
 import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { translations } from '../../language/translations';
-import { setLanguage } from '../../language/languageSlice';
-import Button from '../ui/Button';
+import { translations } from '../../features/language/translations';
+import { setLanguage } from '../../features/language/languageSlice';
+import ThemeToggle from '../ui/ThemeToggle';
+import Logo from '../ui/Logo';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -24,8 +25,8 @@ const Header: React.FC = () => {
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   ) as Language;
-  const t = translations[currentLanguage];  type Language = 'en' | 'de' | 'ru';
-  
+  const t = translations[currentLanguage];
+  type Language = 'en' | 'de' | 'ru';
 
   const handleLanguageChange = (lang: Language) => {
     dispatch(setLanguage(lang));
@@ -53,6 +54,9 @@ const Header: React.FC = () => {
             <span>{t.storeLocator}</span>
             <span>{t.helpContact}</span>
 
+            {/* Theme toggle */}
+            <ThemeToggle />
+
             {/* Language Switcher */}
             <ToggleButtonGroup
               color='primary'
@@ -63,13 +67,13 @@ const Header: React.FC = () => {
               }}
               aria-label='Language switcher'
             >
-              <ToggleButton className='py-0.5! px-2! text-xs!' value='en'>
+              <ToggleButton className='py-1! px-2! text-s!' value='en'>
                 EN
               </ToggleButton>
-              <ToggleButton className='py-0.5! px-2! text-xs!' value='de'>
+              <ToggleButton className='py-1! px-2! text-s!' value='de'>
                 DE
               </ToggleButton>
-              <ToggleButton className='py-0.5! px-2! text-xs!' value='ru'>
+              <ToggleButton className='py-1! px-2! text-s!' value='ru'>
                 RU
               </ToggleButton>
             </ToggleButtonGroup>
@@ -91,11 +95,11 @@ const Header: React.FC = () => {
                 >
                   <MenuIcon />
                 </button>
-
-                <Link to='/' className='flex items-center gap-2 no-underline'>
-                  <h1 className='text-3xl font-bold text-primary font-serif'>
-                    BookStore
-                  </h1>
+                <Link
+                  to='/'
+                  className='flex items-center gap-2 no-underline pl-4'
+                >
+                  <Logo />
                 </Link>
 
                 {/* Desktop Navigation */}

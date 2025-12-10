@@ -69,7 +69,7 @@ const Home: React.FC = () => {
   return (
     <div className='space-y-12 md:space-y-16'>
       {/* Hero Section */}
-      <section className='relative rounded-2xl overflow-hidden bg-linear-to-r from-primary to-blue-900 text-white pl-10'>
+      <section className='relative overflow-hidden bg-linear-to-r from-primary to-blue-900 text-gray-700 dark:from-gray-800 dark:to-gray-900 dark:text-white pl-10'>
         <div className='container-custom py-16 md:py-24'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
             <div>
@@ -90,7 +90,7 @@ const Home: React.FC = () => {
                 </button>
               </div>
             </div>
-            <div className='hidden md:block'>
+            <div className='hidden md:block px-18'>
               <div className='relative'>
                 <img
                   src='https://images.unsplash.com/photo-1589998059171-988d887df646?w=800&h=600&fit=crop'
@@ -106,8 +106,10 @@ const Home: React.FC = () => {
       {/* Featured Categories */}
       <section className='container-custom px-10'>
         <div className='mb-8'>
-          <h2 className='text-3xl font-bold mb-2'>Browse Categories</h2>
-          <p className='text-gray-600'>
+          <h2 className='text-3xl font-bold mb-2 dark:text-gray-100'>
+            Browse Categories
+          </h2>
+          <p className='text-gray-600 dark:text-gray-400'>
             Find your next read in our curated collections
           </p>
         </div>
@@ -116,7 +118,7 @@ const Home: React.FC = () => {
           {categories.map((category) => (
             <div
               key={category.name}
-              className='card-hover bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-lg'
+              className='card-hover bg-white dark:bg-gray-800 dark:text-gray-200 rounded-xl p-4 text-center shadow-sm hover:shadow-lg'
             >
               <div
                 className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${category.color} mb-3`}
@@ -137,10 +139,14 @@ const Home: React.FC = () => {
         <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8'>
           <div>
             <div className='flex items-center gap-2 mb-2'>
-              <LocalFireDepartment className='text-secondary' />
-              <h2 className='text-3xl font-bold'>Bestsellers</h2>
+              <LocalFireDepartment className='text-secondary dark:text-gray-100' />
+              <h2 className='text-3xl font-bold dark:text-gray-100'>
+                Bestsellers
+              </h2>
             </div>
-            <p className='text-gray-600'>Most popular books this week</p>
+            <p className='text-gray-600 dark:text-gray-400'>
+              Most popular books this week
+            </p>
           </div>
           <Link
             to='/bestseller'
@@ -155,7 +161,7 @@ const Home: React.FC = () => {
           {featuredBooks.map((book) => (
             <div
               key={book.id}
-              className='card-hover bg-white rounded-xl shadow-sm overflow-hidden group'
+              className='card-hoverbg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden group dark:text-gray-100'
             >
               <div className='relative overflow-hidden'>
                 <img
@@ -172,7 +178,7 @@ const Home: React.FC = () => {
                   </span>
                 )}
                 {book.sale && (
-                  <span className='absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold'>
+                  <span className='absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold dark:bg-red-600'>
                     Sale
                   </span>
                 )}
@@ -200,7 +206,9 @@ const Home: React.FC = () => {
                         </p>
                       </>
                     ) : (
-                      <p className='font-bold text-lg'>€{book.price}</p>
+                      <p className='font-bold text-lg text-gray-600 dark:text-gray-400'>
+                        €{book.price}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -217,7 +225,7 @@ const Home: React.FC = () => {
 
       {/* Newsletter Section */}
       <section className='container-custom'>
-        <div className='bg-linear-to-r from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12'>
+        <div className='bg-linear-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8 md:p-12'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
             <div>
               <h2 className='text-3xl font-bold mb-4'>Stay Updated</h2>
@@ -230,7 +238,7 @@ const Home: React.FC = () => {
                 <input
                   type='email'
                   placeholder='Your email address'
-                  className='grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
+                  className='grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200'
                 />
                 <button className='btn-secondary px-6 py-3 whitespace-nowrap'>
                   Subscribe
