@@ -5,6 +5,7 @@ import {
   FavoriteBorder,
   LocalFireDepartment,
   AddShoppingCart,
+  TrendingUp,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
@@ -67,25 +68,25 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className='space-y-12 md:space-y-16'>
+    <div className='space-y-12 md:space-y-16 text-gray-700 dark:bg-gray-900 dark:text-gray-400'>
       {/* Hero Section */}
-      <section className='relative overflow-hidden bg-linear-to-r from-primary to-blue-900 text-gray-700 dark:from-gray-800 dark:to-gray-900 dark:text-white pl-10'>
+      <section className='relative overflow-hidden bg-linear-to-r from-primary to-blue-900 text-gray-900 dark:from-gray-800 dark:to-blue-950 dark:text-white pl-10'>
         <div className='container-custom py-16 md:py-24'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
             <div>
-              <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-serif'>
+              <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-serif bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
                 Discover Your Next Favorite Book
               </h1>
               <p className='text-xl mb-8 opacity-90'>
                 Over 1 million titles at your fingertips. Free shipping on
                 orders over €25.
               </p>
-              <div className='flex flex-wrap gap-4'>
+              <div className='flex flex-wrap gap-4 group '>
                 <button className='btn-secondary flex items-center gap-2'>
                   Shop Now
-                  <ArrowForward />
+                  <ArrowForward className='transform group-hover:translate-x-1 transition-transform' />
                 </button>
-                <button className='border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white/10 transition-colors'>
+                <button className='border-2 border-white dark:border-gray-500 text-white dark:text-blue-500 px-6 py-3 rounded-lg hover:bg-white/10 shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all cursor-pointer'>
                   View Bestsellers
                 </button>
               </div>
@@ -106,10 +107,11 @@ const Home: React.FC = () => {
       {/* Featured Categories */}
       <section className='container-custom px-10'>
         <div className='mb-8'>
-          <h2 className='text-3xl font-bold mb-2 dark:text-gray-100'>
+          <h2 className='text-3xl font-bold mb-2'>
+            <TrendingUp className='text-purple-700 pr-2' />
             Browse Categories
           </h2>
-          <p className='text-gray-600 dark:text-gray-400'>
+          <p className='text-gray-600'>
             Find your next read in our curated collections
           </p>
         </div>
@@ -118,7 +120,7 @@ const Home: React.FC = () => {
           {categories.map((category) => (
             <div
               key={category.name}
-              className='card-hover bg-white dark:bg-gray-800 dark:text-gray-200 rounded-xl p-4 text-center shadow-sm hover:shadow-lg'
+              className='card-hover bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all'
             >
               <div
                 className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${category.color} mb-3`}
@@ -139,14 +141,10 @@ const Home: React.FC = () => {
         <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8'>
           <div>
             <div className='flex items-center gap-2 mb-2'>
-              <LocalFireDepartment className='text-secondary dark:text-gray-100' />
-              <h2 className='text-3xl font-bold dark:text-gray-100'>
-                Bestsellers
-              </h2>
+              <LocalFireDepartment className='text-orange-600' />
+              <h2 className='text-3xl font-bold'>Bestsellers</h2>
             </div>
-            <p className='text-gray-600 dark:text-gray-400'>
-              Most popular books this week
-            </p>
+            <p className='text-gray-600'>Most popular books this week</p>
           </div>
           <Link
             to='/bestseller'
@@ -161,7 +159,7 @@ const Home: React.FC = () => {
           {featuredBooks.map((book) => (
             <div
               key={book.id}
-              className='card-hoverbg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden group dark:text-gray-100'
+              className='card-hoverbg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden group'
             >
               <div className='relative overflow-hidden'>
                 <img
@@ -170,7 +168,7 @@ const Home: React.FC = () => {
                   className='w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300'
                 />
                 <button className='absolute top-3 right-3 bg-white/90 hover:bg-white p-2 rounded-full shadow-sm'>
-                  <FavoriteBorder className='w-5 h-5' />
+                  <FavoriteBorder className='w-5 h-5 dark:text-black/90 dark:hover:text-gray-400' />
                 </button>
                 {book.bestseller && (
                   <span className='absolute top-3 left-3 bg-secondary text-white px-2 py-1 rounded text-xs font-semibold'>
@@ -206,7 +204,7 @@ const Home: React.FC = () => {
                         </p>
                       </>
                     ) : (
-                      <p className='font-bold text-lg text-gray-600 dark:text-gray-400'>
+                      <p className='font-bold text-lg text-gray-600'>
                         €{book.price}
                       </p>
                     )}
@@ -224,7 +222,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className='container-custom'>
+      <section className='container-custom px-10 pb-15'>
         <div className='bg-linear-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8 md:p-12'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
             <div>
