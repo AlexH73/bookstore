@@ -9,10 +9,12 @@ import {
   LocalShipping,
   ArrowDropDown,
 } from '@mui/icons-material';
+import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { translations } from '../../language/translations';
 import { setLanguage } from '../../language/languageSlice';
+import Button from '../ui/Button';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -32,9 +34,7 @@ const Header: React.FC = () => {
   const navigationItems = [
     { label: t.nav.bestseller, path: '/bestseller' },
     { label: t.nav.fiction, path: '/fiction' },
-    { label: t.nav.nonFiction, path: '/non-fiction' },
     { label: t.nav.children, path: '/children' },
-    { label: t.nav.ebooks, path: '/ebooks' },
     { label: t.nav.audioBooks, path: '/audio' },
     { label: t.nav.gifts, path: '/gifts' },
     { label: t.nav.sale, path: '/sale' },
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
   return (
     <>
       {/* Top Promo Bar */}
-      <div className='bg-primary text-white py-2 px-10'>
+      <div className='bg-primary text-gray-400 py-2 px-10'>
         <div className='container-custom flex justify-between items-center'>
           <div className='flex items-center gap-2 text-sm'>
             <LocalShipping className='w-4 h-4' />
@@ -52,26 +52,27 @@ const Header: React.FC = () => {
           <div className='hidden md:flex items-center gap-4 text-sm'>
             <span>{t.storeLocator}</span>
             <span>{t.helpContact}</span>
+
             {/* Language Switcher */}
-            <div className='flex gap-2'>
-              {(['en', 'de', 'ru'] as Language[]).map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => handleLanguageChange(lang)}
-                  className={`uppercase font-medium ${
-                    currentLanguage === lang
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }`}
-                  disabled={currentLanguage === lang}
-                  style={{
-                    cursor: currentLanguage === lang ? 'default' : 'pointer',
-                  }}
-                >
-                  {lang}
-                </button>
-              ))}
-            </div>
+            <ToggleButtonGroup
+              color='primary'
+              value={currentLanguage}
+              exclusive
+              onChange={(_, newLang) => {
+                if (newLang !== null) handleLanguageChange(newLang as Language);
+              }}
+              aria-label='Language switcher'
+            >
+              <ToggleButton className='py-0.5! px-2! text-xs!' value='en'>
+                EN
+              </ToggleButton>
+              <ToggleButton className='py-0.5! px-2! text-xs!' value='de'>
+                DE
+              </ToggleButton>
+              <ToggleButton className='py-0.5! px-2! text-xs!' value='ru'>
+                RU
+              </ToggleButton>
+            </ToggleButtonGroup>
           </div>
         </div>
       </div>
@@ -81,7 +82,7 @@ const Header: React.FC = () => {
         <div className='container-custom'>
           <div className='flex flex-col md:flex-row gap-4 py-4'>
             {/* Top Row */}
-            <div className='flex w-full items-center justify-between'>
+            <div className='flex w-full items-center justify-between text-xs'>
               {/* Left: Menu & Logo */}
               <div className='flex items-center gap-4 md:gap-8'>
                 <button
@@ -92,7 +93,7 @@ const Header: React.FC = () => {
                 </button>
 
                 <Link to='/' className='flex items-center gap-2 no-underline'>
-                  <h1 className='text-2xl font-bold text-primary font-serif'>
+                  <h1 className='text-3xl font-bold text-primary font-serif'>
                     BookStore
                   </h1>
                 </Link>
@@ -179,7 +180,7 @@ const Header: React.FC = () => {
             )}
 
             {/* Bottom Row: Desktop Extended Navigation */}
-            <div className='hidden md:flex w-full items-center justify-between pt-4'>
+            <div className='hidden md:flex w-full justify-end items-center gap-6 pt-4 text-xs'>
               <nav className='flex gap-6'>
                 {navigationItems.slice(4).map((item) => (
                   <Link
@@ -194,7 +195,9 @@ const Header: React.FC = () => {
 
               <div className='flex items-center gap-4'>
                 <span className='text-gray-600'>{t.newReleases}</span>
-                <button className='btn-secondary px-4 py-2'>{t.subscribe}</button>
+                <button className='btn-secondary px-4 py-2'>
+                  {t.subscribe}
+                </button>
               </div>
             </div>
           </div>
