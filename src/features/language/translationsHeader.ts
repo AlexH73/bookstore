@@ -20,6 +20,7 @@ export interface HeaderTranslations {
   subscribe: string;
   menu: string;
   more: string;
+  logoSubtitle: string;
   nav: NavTranslations;
 }
 
@@ -37,6 +38,7 @@ export const translationsHeader: Record<
       subscribe: 'Подписаться',
       menu: 'Меню',
       more: 'Еще',
+      logoSubtitle: 'Книжный интернет-магазин',
       nav: {
         bestseller: 'Бестселлеры',
         fiction: 'Художественная',
@@ -59,6 +61,7 @@ export const translationsHeader: Record<
       subscribe: 'Subscribe',
       menu: 'Menu',
       more: 'More',
+      logoSubtitle: 'Online Bookshop',
       nav: {
         bestseller: 'Bestseller',
         fiction: 'Fiction',
@@ -81,6 +84,7 @@ export const translationsHeader: Record<
       subscribe: 'Abonnieren',
       menu: 'Menü',
       more: 'Mehr',
+      logoSubtitle: 'Online-Buchhandlung',
       nav: {
         bestseller: 'Bestseller',
         fiction: 'Belletristik',
