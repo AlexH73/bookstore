@@ -10,6 +10,15 @@ import App from './App';
 // import store from './store';
 import './index.css';
 import { AuthProvider } from "../src/RegisterUndLogin/AuthContext";
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import App from './App';
+import theme from './features/theme/theme';
+// import store from './store';
+import './index.css';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +42,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
          {/* </ThemeProvider>*/}
         </QueryClientProvider>
       {/* </Provider> */}
+       <Provider store={store}> 
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <App />
+          </ThemeProvider>
+        </QueryClientProvider>
+       </Provider> 
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -1,68 +1,56 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* === LIGHT THEME — Elegant Pastel Violet === */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --background: #faf9fc;
+  --foreground: #1a1a1f;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Palette */
+  --primary: #7f6edc;       /* Violet */
+  --secondary: #b8a8f2;     /* Lavender */
+  --accent: #ff8fa3;        /* Soft Coral Pink */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Functional */
+  --warning: #ffbf81;       /* Pastel orange */
+  --success: #4da98f;       /* Soft jade green */
+  --info: #4c9cd6;          /* Pastel blue */
+
+  /* UI */
+  --border: #d7d5e0;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* === DARK THEME — Elegant Deep Violet === */
+.dark {
+  --background: #0f0f11;
+  --foreground: #f0f0f5;
+
+  /* --primary: #9e8aff;
+  --secondary: #c7baff;
+
+  --accent: #ff7994;
+
+  --warning: #ffb36a;
+  --success: #4db69b;
+  --info: #5aaee8;
+
+  --border: #3b3b45; */
 }
-a:hover {
-  color: #535bf2;
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-info: var(--info); */
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  background: var(--background);
+  color: var(--foreground);
 }
