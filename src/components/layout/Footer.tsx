@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
-import { translations } from '../../features/language/translations';
+import { translationsFooter } from '../../features/language/translationsFooter';
 
 const Footer: React.FC = () => {
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   );
-  const t = translations[currentLanguage].footer;
+  const t = translationsFooter[currentLanguage].footer;
 
   const footerLinks = {
     [t.links.shop.title]: [

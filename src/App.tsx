@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 //import Layout from './components/layout/Layout';
 //import Home from './pages/Home';
@@ -14,6 +14,7 @@ import { useThemeMode } from './features/theme/useThemeMode';
 // import Checkout from './pages/Checkout';
 
 const App: React.FC = () => {
+  useThemeMode(); 
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -34,9 +35,7 @@ const App: React.FC = () => {
         <Route path='cart' element={<Cart />} />
         <Route path='checkout' element={<Checkout />} /> 
       </Route> */}
-  useThemeMode(); 
-  return (
-    <Routes>
+  
       <Route path='/' element={<Layout />}>
         <Route index element={<Home />} />
         {/* <Route path='catalog' element={<Catalog />} />

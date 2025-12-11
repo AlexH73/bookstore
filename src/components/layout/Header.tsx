@@ -12,8 +12,8 @@ import {
 import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { translations } from '../../features/language/translations';
-import { setLanguage } from '../../features/language/languageSlice';
+import { translationsHeader } from '../../features/language/translationsHeader';
+import { setLanguage, type Language } from '../../features/language/languageSlice';
 import ThemeToggle from '../ui/ThemeToggle';
 import Logo from '../ui/Logo';
 
@@ -24,9 +24,8 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
-  ) as Language;
-  const t = translations[currentLanguage];
-  type Language = 'en' | 'de' | 'ru';
+  );
+  const t = translationsHeader[currentLanguage].header;
 
   const handleLanguageChange = (lang: Language) => {
     dispatch(setLanguage(lang));

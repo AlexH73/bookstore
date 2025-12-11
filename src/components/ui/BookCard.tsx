@@ -1,5 +1,7 @@
 import React from 'react';
 import { Star, FavoriteBorder, AddShoppingCart } from '@mui/icons-material';
+import { useAppSelector } from '../../app/hooks';
+import { translationsBookCard } from '../../features/language/translationsBookCard';
 
 interface BookCardProps {
   book: {
@@ -23,6 +25,11 @@ const BookCard: React.FC<BookCardProps> = ({
   onAddToCart,
   onToggleFavorite,
 }) => {
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translationsBookCard[currentLanguage].bookCard;
+
   return (
     <div className='group bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300'>
       {/* Image Container */}
@@ -37,12 +44,12 @@ const BookCard: React.FC<BookCardProps> = ({
         <div className='absolute top-3 left-3 flex flex-col gap-1'>
           {book.bestseller && (
             <span className='bg-secondary text-white px-2 py-1 rounded text-xs font-semibold'>
-              Bestseller
+              {t.bestseller}
             </span>
           )}
           {book.sale && (
             <span className='bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold'>
-              Sale
+              {t.sale}
             </span>
           )}
         </div>
@@ -101,7 +108,7 @@ const BookCard: React.FC<BookCardProps> = ({
           className='btn-primary w-full flex items-center justify-center gap-2'
         >
           <AddShoppingCart className='w-5 h-5' />
-          Add to Cart
+          {t.addToCart}
         </button>
       </div>
     </div>

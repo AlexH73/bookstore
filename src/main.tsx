@@ -4,19 +4,16 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 //import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import App from './App';
 //import theme from './theme/theme';
 // import store from './store';
 import './index.css';
-import { AuthProvider } from "../src/RegisterUndLogin/AuthContext";
+import { AuthProvider } from "./RegisterUndLogin/AuthContext"; 
 import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import theme from './features/theme/theme';
 // import store from './store';
-import './index.css';
+// import './index.css'; // 
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 
@@ -33,20 +30,22 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       {/* <Provider store={store}> */}
-        <QueryClientProvider client={queryClient}>
+        {/* <QueryClientProvider client={queryClient}> */}
           {/*<ThemeProvider theme={theme}>*/}
-            <CssBaseline />
-            <AuthProvider>
-            <App />
-                </AuthProvider>
+            {/* <CssBaseline /> */}
+            {/* <AuthProvider> */}
+            {/* <App /> */}
+                {/* </AuthProvider> */}
          {/* </ThemeProvider>*/}
-        </QueryClientProvider>
+        {/* </QueryClientProvider> */}
       {/* </Provider> */}
        <Provider store={store}> 
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <App />
+            <AuthProvider> 
+                <App />
+            </AuthProvider>
           </ThemeProvider>
         </QueryClientProvider>
        </Provider> 
