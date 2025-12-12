@@ -70,7 +70,7 @@ const Home: React.FC = () => {
   return (
     <div className='space-y-12 md:space-y-16 text-gray-700 dark:bg-gray-900 dark:text-gray-400'>
       {/* Hero Section */}
-      <section className='relative overflow-hidden bg-linear-to-r from-primary to-blue-900 text-gray-900 dark:from-gray-800 dark:to-blue-950 dark:text-white pl-10'>
+      <section className='relative overflow-hidden bg-linear-to-r from-gray-100 to-blue-900 text-gray-900 dark:from-gray-800 dark:to-blue-950 dark:text-white pl-10'>
         <div className='container-custom py-16 md:py-24'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
             <div>

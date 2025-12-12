@@ -2,9 +2,10 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-// Reducers
+// Import existing reducers
 import languageReducer from '../features/language/languageSlice';
 import themeReducer from '../features/theme/themeSlice';
+
 
 // ---------- Комбинируем все редьюсеры ----------
 
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['language', 'theme'],
+  whitelist: ['language', 'theme', 'user'],
+  blacklist: [], // Исключаем то, что не нужно сохранять
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
