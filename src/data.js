@@ -1,5 +1,6 @@
 const books = [
-  {
+  { 
+    id: 1,
     title: "1984",
     author: "George Orwell",
     isbn: "978-0451524935",
@@ -13,8 +14,11 @@ const books = [
     reviews_count: 15000,
     cover_url:
       "https://images.thalia.media/00/-/f066771ce4b749b18da2376352dc032f/george-orwell-1984-deutschsprachige-gesamtausgabe-epub-george-orwell.jpeg",
+    annotation:
+      "A dark dystopian story about a society under absolute surveillance. Winston Smith struggles to preserve independent thought and dignity while living under the oppressive rule of Big Brother.",
   },
   {
+    id: 2,
     title: "Pride and Prejudice",
     author: "Jane Austen",
     isbn: "978-0141439518",
@@ -28,8 +32,11 @@ const books = [
     reviews_count: 12000,
     cover_url:
       "https://images.thalia.media/00/-/504699a464d24aefa6072c35d6c48b85/pride-and-prejudice-gebundene-ausgabe-jane-austen-englisch.jpeg",
+    annotation:
+      "A witty romantic novel about family, social expectations, and personal growth. Elizabeth Bennet and Mr. Darcy must overcome pride and misconceptions to discover true love.",
   },
   {
+    id: 3,
     title: "To Kill a Mockingbird",
     author: "Harper Lee",
     isbn: "978-0060935467",
@@ -43,8 +50,11 @@ const books = [
     reviews_count: 13000,
     cover_url:
       "https://images.thalia.media/00/-/f27e68b3c4aa47e48e8b7022e4eedbd6/to-kill-a-mockingbird-epub-harper-lee.jpeg",
+    annotation:
+      "A moving coming-of-age story set in the racially divided American South. Young Scout Finch witnesses injustice while her father Atticus fights to uphold morality and fairness.",
   },
   {
+    id: 4,
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
     isbn: "978-0743273565",
@@ -58,8 +68,11 @@ const books = [
     reviews_count: 9000,
     cover_url:
       "https://images.thalia.media/00/-/215a7b27d9f94f7295847312416d0c6a/the-great-gatsby-taschenbuch-f-scott-fitzgerald-englisch.jpeg",
+    annotation:
+      "A portrait of love, wealth, and illusion during the Jazz Age. Mysterious millionaire Jay Gatsby seeks to recreate a vanished past, chasing a dream destined to collapse.",
   },
   {
+    id: 5,
     title: "Moby-Dick",
     author: "Herman Melville",
     isbn: "978-0142437247",
@@ -73,8 +86,11 @@ const books = [
     reviews_count: 5000,
     cover_url:
       "https://media2.hugendubel.de/shop/coverscans/939/9397229_9397229_xl.jpg",
+    annotation:
+      "An epic tale of Captain Ahab’s obsessive quest to hunt the white whale. The novel explores vengeance, fate, and humanity’s struggle against the unknown.",
   },
   {
+    id: 6,
     title: "The Catcher in the Rye",
     author: "J.D. Salinger",
     isbn: "978-0316769488",
@@ -88,8 +104,11 @@ const books = [
     reviews_count: 7000,
     cover_url:
       "https://images.thalia.media/00/-/a3e257248c7b4d7c8243e32e64144ad8/the-catcher-in-the-rye-klett-sprachen-gmbh.jpeg",
+    annotation:
+      "A story of teenage alienation following Holden Caulfield as he searches for authenticity in a world he sees as fake. A timeless reflection on youth and rebellion.",
   },
   {
+    id: 7,
     title: "War and Peace",
     author: "Leo Tolstoy",
     isbn: "978-0199232765",
@@ -103,8 +122,11 @@ const books = [
     reviews_count: 8000,
     cover_url:
       "https://media2.hugendubel.de/shop/coverscans/496/49678781_9781454959885_xl.jpg",
+    annotation:
+      "A monumental saga set during the Napoleonic Wars. The intertwined destinies of aristocratic families explore love, history, personal transformation, and national identity.",
   },
   {
+    id: 8,
     title: "Crime and Punishment",
     author: "Fyodor Dostoevsky",
     isbn: "978-0140449136",
@@ -117,8 +139,11 @@ const books = [
     rating: 4.7,
     reviews_count: 9000,
     cover_url: "https://bilder.buecher.de/produkte/72/72706/72706935z.jpg",
+    annotation:
+      "A psychological drama about student Raskolnikov, who commits a crime believing he is above morality, only to face a moral and spiritual reckoning.",
   },
   {
+    id: 9,
     title: "The Brothers Karamazov",
     author: "Fyodor Dostoevsky",
     isbn: "978-0374528379",
@@ -131,8 +156,11 @@ const books = [
     rating: 4.8,
     reviews_count: 7500,
     cover_url: "https://bilder.buecher.de/produkte/67/67824/67824488z.jpg",
+    annotation:
+      "A philosophical novel centered on the Karamazov family, dealing with themes of faith, free will, guilt, and the complexity of human nature.",
   },
   {
+    id: 10,
     title: "The Hobbit",
     author: "J.R.R. Tolkien",
     isbn: "978-0547928227",
@@ -146,8 +174,11 @@ const books = [
     reviews_count: 14000,
     cover_url:
       "https://m.media-amazon.com/images/I/51FJVlBcZKL._SY445_SX342_ControlCacheEqualizer_.jpg",
+    annotation:
+      "A charming adventure in which Bilbo Baggins embarks on a journey filled with danger, magic, and self-discovery, ultimately proving himself braver than he imagined.",
   },
   {
+    id: 11,
     title: "The Lord of the Rings",
     author: "J.R.R. Tolkien",
     isbn: "978-0618640157",
@@ -160,8 +191,11 @@ const books = [
     rating: 4.9,
     reviews_count: 20000,
     cover_url: "https://pictures.abebooks.com/isbn/9780618260294-us.jpg",
+    annotation:
+      "An epic fantasy saga about the struggle between light and darkness. The fate of Middle-earth depends on Frodo’s quest to destroy the One Ring.",
   },
   {
+    id: 12,
     title: "Brave New World",
     author: "Aldous Huxley",
     isbn: "978-0060850524",
@@ -175,8 +209,11 @@ const books = [
     reviews_count: 11000,
     cover_url:
       "https://media2.hugendubel.de/shop/coverscans/281/2819584_9780099477464_xl.jpg",
+    annotation:
+      "A dystopian vision of a world engineered for stability, where individuality is replaced with manufactured happiness, prompting questions about freedom and humanity.",
   },
   {
+    id: 13,
     title: "The Divine Comedy",
     author: "Dante Alighieri",
     isbn: "978-0140448955",
@@ -189,8 +226,11 @@ const books = [
     rating: 4.7,
     reviews_count: 6000,
     cover_url: "https://bilder.buecher.de/produkte/38/38076/38076895z.jpg",
+    annotation:
+      "A spiritual journey through Hell, Purgatory, and Heaven, filled with symbolism. Dante seeks meaning and salvation through poetic exploration of the human soul.",
   },
   {
+    id: 14,
     title: "Anna Karenina",
     author: "Leo Tolstoy",
     isbn: "978-0140449174",
@@ -204,8 +244,11 @@ const books = [
     reviews_count: 7000,
     cover_url:
       "https://images.thalia.media/00/-/a8b94cbb0f4b4fcc8f416d6479a78126/leo-tolstoi-anna-karenina-vollstaendige-neuausgabe-taschenbuch-leo-n-tolstoi.jpeg",
+    annotation:
+      "A tragic love story about Anna, whose passionate affair leads to social ruin, contrasted with themes of morality, family, and inner harmony.",
   },
   {
+    id: 15,
     title: "Don Quixote",
     author: "Miguel de Cervantes",
     isbn: "978-0060934347",
@@ -219,8 +262,11 @@ const books = [
     reviews_count: 5000,
     cover_url:
       "https://images.thalia.media/00/-/6f19f955a0bc4c8599efec73f656eabc/don-quijote-gebundene-ausgabe-miguel-de-cervantes-saavedra.jpeg",
+    annotation:
+      "A humorous yet profound tale of an idealistic knight and his loyal squire. The novel questions reality, dreams, and the nature of heroism.",
   },
   {
+    id: 16,
     title: "Fahrenheit 451",
     author: "Ray Bradbury",
     isbn: "978-1451673319",
@@ -234,8 +280,11 @@ const books = [
     reviews_count: 8000,
     cover_url:
       "https://images.thalia.media/00/-/7d5c16c420804cf091bad35317214004/fahrenheit-451-epub-3-ray-bradbury.jpeg",
+    annotation:
+      "A dystopian story where books are banned and burned. Fireman Montag begins to question the oppressive system and seeks intellectual freedom.",
   },
   {
+    id: 17,
     title: "Ulysses",
     author: "James Joyce",
     isbn: "978-0199535675",
@@ -249,8 +298,11 @@ const books = [
     reviews_count: 4000,
     cover_url:
       "https://cdn.kobo.com/book-images/17f4f2f5-2ae8-4d6d-9e30-7efde7bc4d25/353/569/90/False/ulysses-by-james-joyce-5.jpg",
+    annotation:
+      "A modern reinterpretation of Homer’s Odyssey, set over the course of a single day. A bold literary experiment exploring human consciousness and city life.",
   },
   {
+    id: 18,
     title: "The Odyssey",
     author: "Homer",
     isbn: "978-0140268867",
@@ -264,8 +316,11 @@ const books = [
     reviews_count: 6500,
     cover_url:
       "https://m.media-amazon.com/images/I/41E1Rih2SKL._SY445_SX342_ControlCacheEqualizer_.jpg",
+    annotation:
+      "An ancient epic following Odysseus’s perilous journey home after the Trojan War, celebrating resilience, cleverness, loyalty, and fate.",
   },
   {
+    id: 19,
     title: "The Iliad",
     author: "Homer",
     isbn: "978-0140275360",
@@ -278,8 +333,11 @@ const books = [
     rating: 4.7,
     reviews_count: 6000,
     cover_url: "https://m.media-amazon.com/images/I/812J3zk+6OL._SL1500_.jpg",
+    annotation:
+      "A monumental epic depicting the final events of the Trojan War. Heroism, wrath, and destiny intertwine against a backdrop of gods and warriors.",
   },
   {
+    id: 20,
     title: "The Old Man and the Sea",
     author: "Ernest Hemingway",
     isbn: "978-0684801223",
@@ -293,8 +351,11 @@ const books = [
     reviews_count: 7500,
     cover_url:
       "https://images.thalia.media/00/-/95711c53c99945f9b19078c9ba648862/the-old-man-and-the-sea-reclam-philipp.jpeg",
+    annotation:
+      "A symbolic tale of a fisherman fighting a giant marlin. A story of dignity, perseverance, and inner strength in the face of defeat.",
   },
   {
+    id: 21,
     title: "The Sun Also Rises",
     author: "Ernest Hemingway",
     isbn: "978-0743297332",
@@ -306,9 +367,12 @@ const books = [
     stock: 60,
     rating: 4.3,
     reviews_count: 6200,
-    cover_url: "https://covers.openlibrary.org/b/isbn/0743297332-L.jpg",
+    cover_url: "https://prodimage.images-bn.com/pimages/9781949846485_p0_v1_s600x595.jpg",
+    annotation:
+      "A novel about the Lost Generation, exploring emotional emptiness, unfulfilled love, and the search for meaning in post-war Europe.",
   },
   {
+    id: 22,
     title: "For Whom the Bell Tolls",
     author: "Ernest Hemingway",
     isbn: "978-0684803357",
@@ -322,8 +386,11 @@ const books = [
     reviews_count: 5800,
     cover_url:
       "https://media2.hugendubel.de/shop/coverscans/414/41422605_9780593466346_xl.jpg",
+    annotation:
+      "A wartime drama about duty, sacrifice, and fleeting love, set during the Spanish Civil War. A reflection on idealism and mortality.",
   },
   {
+    id: 23,
     title: "Hamlet",
     author: "William Shakespeare",
     isbn: "978-0743477123",
@@ -336,8 +403,11 @@ const books = [
     rating: 4.6,
     reviews_count: 7000,
     cover_url: "https://bilder.buecher.de/produkte/08/08298/08298948z.jpg",
+    annotation:
+      "A tragedy about Prince Hamlet, who seeks truth and justice for his father's death. The play explores doubt, revenge, and moral conflict.",
   },
   {
+    id: 24,
     title: "Macbeth",
     author: "William Shakespeare",
     isbn: "978-0743477109",
@@ -351,8 +421,11 @@ const books = [
     reviews_count: 6500,
     cover_url:
       "https://media2.hugendubel.de/shop/coverscans/479/47905361_9783150145258_xl.jpg",
+    annotation:
+      "A dark tragedy about ambition and power. Macbeth’s rise to the throne leads to guilt, madness, and destruction.",
   },
   {
+    id: 25,
     title: "Romeo and Juliet",
     author: "William Shakespeare",
     isbn: "978-0743477116",
@@ -366,5 +439,7 @@ const books = [
     reviews_count: 7200,
     cover_url:
       "https://images.thalia.media/00/-/6b68cffe93594839a71aea8412094618/romeo-and-juliet-klett-sprachen-gmbh.jpeg",
+    annotation:
+      "A timeless tragedy of forbidden love between two young people from feuding families. Their fate exposes the costs of hatred and conflict.",
   },
 ];
