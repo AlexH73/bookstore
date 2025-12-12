@@ -1,25 +1,35 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage"; // localStorage
-import { persistStore, persistReducer } from "redux-persist";
-import booksReducer from "../pages/BookCatalog/booksSlice";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: ["books"], 
-};
+// Import existing reducers
+import languageReducer from '../features/language/languageSlice';
+import themeReducer from '../features/theme/themeSlice';
+
+
+// ---------- Комбинируем все редьюсеры ----------
 
 const rootReducer = combineReducers({
-  books: booksReducer,
+  language: languageReducer,
+  theme: themeReducer,
 });
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['language', 'theme', 'user'],
+  blacklist: [], // Исключаем то, что не нужно сохранять
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// ---------- Создаём store ----------
+
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false, 
+  middleware: (getDefault) =>
+    getDefault({
+      serializableCheck: {},
     }),
 });
 
