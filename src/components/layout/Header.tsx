@@ -18,6 +18,8 @@ import { setLanguage, type Language } from '../../features/language/languageSlic
 import ThemeToggle from '../ui/ThemeToggle';
 import Logo from '../ui/Logo';
 import LanguageToggle from '../ui/LanguageToggle';
+import { Tooltip } from '@mui/material';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
