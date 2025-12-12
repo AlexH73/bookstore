@@ -11,15 +11,13 @@ import {
   LocalShipping,
   ArrowDropDown,
 } from '@mui/icons-material';
-import { Tooltip } from '@mui/material';
-import { useAuth } from '../../contexts/AuthContext';
-import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { translations } from '../../features/language/translations';
-import { setLanguage } from '../../features/language/languageSlice';
+import { translationsHeader } from '../../features/language/translationsHeader';
+import { setLanguage, type Language } from '../../features/language/languageSlice';
 import ThemeToggle from '../ui/ThemeToggle';
 import Logo from '../ui/Logo';
+import LanguageToggle from '../ui/LanguageToggle';
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,9 +28,8 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
-  ) as Language;
-  const t = translations[currentLanguage];
-  type Language = 'en' | 'de' | 'ru';
+  );
+  const t = translationsHeader[currentLanguage].header;
 
   const handleLanguageChange = (lang: Language) => {
     dispatch(setLanguage(lang));
@@ -69,34 +66,10 @@ const Header: React.FC = () => {
             <ThemeToggle />
 
             {/* Language Switcher */}
-            <ToggleButtonGroup
-              color='primary'
-              value={currentLanguage}
-              exclusive
-              onChange={(_, newLang) => {
-                if (newLang !== null) handleLanguageChange(newLang as Language);
-              }}
-              aria-label='Language switcher'
-            >
-              <ToggleButton
-                className='py-1! px-2! text-s! dark:bg-gray-400!'
-                value='en'
-              >
-                EN
-              </ToggleButton>
-              <ToggleButton
-                className='py-1! px-2! text-s! dark:bg-gray-400!'
-                value='de'
-              >
-                DE
-              </ToggleButton>
-              <ToggleButton
-                className='py-1! px-2! text-s! dark:bg-gray-400!'
-                value='ru'
-              >
-                RU
-              </ToggleButton>
-            </ToggleButtonGroup>
+            <LanguageToggle
+              currentLanguage={currentLanguage}
+              handleLanguageChange={handleLanguageChange}
+            />
           </div>
         </div>
       </div>
