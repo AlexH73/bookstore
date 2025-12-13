@@ -13,7 +13,7 @@ export const BookDetails = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 mt-8">
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="flex-shrink-0 mx-auto md:mx-0">
+        <div className="shrink-0 mx-auto md:mx-0">
           <img
             src={book.cover_url}
             alt={book.title}

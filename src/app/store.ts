@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 // Import existing reducers
 import languageReducer from '../features/language/languageSlice';
 import themeReducer from '../features/theme/themeSlice';
+import booksReducer from '../pages/BookCatalog/booksSlice';
 
 
 // ---------- Комбинируем все редьюсеры ----------
@@ -12,12 +13,13 @@ import themeReducer from '../features/theme/themeSlice';
 const rootReducer = combineReducers({
   language: languageReducer,
   theme: themeReducer,
+  books: booksReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['language', 'theme', 'user'],
+  whitelist: ['language', 'theme', 'user', "books"],
   blacklist: [], // Исключаем то, что не нужно сохранять
 };
 

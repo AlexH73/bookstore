@@ -5,6 +5,7 @@ import { BookCard } from "./BookCard";
 import { currentUser } from "./types/User";
 import type { Book } from "./types/Book";
 import { BookForm } from "./BookForm";
+// import BookCard from "../../components/ui/BookCard";
 
 
 export const BooksList = () => {
@@ -60,6 +61,18 @@ export const BooksList = () => {
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {books.map((book) => (
             <BookCard key={book.id} book={book} onEdit={handleEdit} />
+            // <BookCard book={{
+            //           id: {book.id},
+            //           title: '',
+            //           author: '',
+            //           price: 0,
+            //           rating: 0,
+            //           image: '',
+            //           category: '',
+            //           bestseller: undefined,
+            //           sale: undefined,
+            //           salePrice: undefined
+            //         }} />
           ))}
         </div>
       )}

@@ -10,6 +10,11 @@ import {
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { translationsHome } from '../features/language/translationsHome';
+import BookCard from '../components/ui/BookCard';
+import { BookDetails } from './BookCatalog/BookInfo';
+// import { BookCard } from './BookCatalog/BookCard';
+// import type { Book } from './BookCatalog/types/Book';
+import { BooksList } from './BookCatalog/BooksList';
 
 const Home: React.FC = () => {
   const currentLanguage = useAppSelector(
@@ -253,6 +258,21 @@ const Home: React.FC = () => {
             </div>
           ))}
         </div>
+
+        <BookCard book={{
+          id: '',
+          title: '',
+          author: '',
+          price: 0,
+          rating: 0,
+          image: '',
+          category: '',
+          bestseller: undefined,
+          sale: undefined,
+          salePrice: undefined
+        }} />
+<BooksList />
+        <BookDetails />
       </section>
 
       {/* Newsletter Section */}
