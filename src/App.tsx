@@ -12,6 +12,7 @@ import Catalog from './pages/Catalog';
 import BookPage from './pages/BookPage';
 import BookForm from './components/book/BookForm';
 import EditBook from './pages/EditBook';
+import Bestseller from './pages/Bestseller';
 
 const App: React.FC = () => {
   useThemeMode();
@@ -72,6 +73,20 @@ const App: React.FC = () => {
               }
             >
               <EditBook />
+            </Suspense>
+          }
+        />
+        <Route
+          path='/bestseller'
+          element={
+            <Suspense
+              fallback={
+                <div className='flex justify-center py-12'>
+                  <CircularProgress />
+                </div>
+              }
+            >
+              <Bestseller />
             </Suspense>
           }
         />

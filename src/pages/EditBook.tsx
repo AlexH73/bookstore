@@ -4,6 +4,30 @@ import BookForm from '../components/book/BookForm';
 import { useGetLocalBooksQuery } from '../api/bookApi';
 import { CircularProgress, Alert, Button } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
+import type { LocalBook, BookFormData } from '../types/book';
+
+// Функция преобразования LocalBook в BookFormData
+const convertToFormData = (book: LocalBook): BookFormData => {
+  return {
+    title: book.title || '',
+    author: book.author || '',
+    price: book.price || 0,
+    rating: book.rating || 0,
+    image: book.image || '',
+    category: book.category || '',
+    description: book.description || '',
+    isbn: book.isbn || '',
+    pages: book.pages || 0,
+    publisher: book.publisher || '',
+    publicationDate:
+      book.publicationDate || new Date().toISOString().split('T')[0],
+    language: book.language || 'English',
+    bestseller: book.bestseller || false,
+    sale: book.sale || false,
+    salePrice: book.salePrice || 0,
+    stock: book.stock || 0,
+  };
+};
 
 const EditBook: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +63,9 @@ const EditBook: React.FC = () => {
     );
   }
 
-  return <BookForm initialValues={book} isEdit={true} />;
+  const initialValues = convertToFormData(book);
+
+  return <BookForm initialValues={initialValues} isEdit={true} />;
 };
 
 export default EditBook;

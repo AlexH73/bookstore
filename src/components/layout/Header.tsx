@@ -39,11 +39,11 @@ const Header: React.FC = () => {
 
   const navigationItems = [
     { label: t.nav.bestseller, path: '/bestseller' },
-    { label: t.nav.fiction, path: '/fiction' },
-    { label: t.nav.children, path: '/children' },
-    { label: t.nav.audioBooks, path: '/audio' },
-    { label: t.nav.gifts, path: '/gifts' },
-    { label: t.nav.sale, path: '/sale' },
+    { label: t.nav.catalog, path: '/catalog' },
+    { label: t.nav.fiction, path: '/catalog?category=Fiction' },
+    { label: t.nav.children, path: '/children?category=Children' },
+    { label: t.nav.gifts, path: '/gifts?category=Gifts' },
+    // { label: t.nav.sale, path: '/sale' },
   ];
 
   const handleLogout = () => {

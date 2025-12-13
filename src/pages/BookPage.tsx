@@ -15,13 +15,9 @@ import {
   Chip,
   Alert,
   CircularProgress,
-  IconButton,
-  Tabs,
-  Tab,
 } from '@mui/material';
 import { useGetBookByIdQuery } from '../api/bookApi';
 import { useAppSelector } from '../app/hooks';
-import { type Book } from '../types/book';
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

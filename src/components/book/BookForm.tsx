@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   TextField,
-  Button,
   MenuItem,
   FormControl,
   InputLabel,
@@ -20,6 +19,7 @@ import {
 } from '../../api/bookApi';
 import { type BookFormData } from '../../types/book';
 import { useCurrentUser, useIsAdmin } from '../../app/hooks';
+import placeholder from "../../assets/placeholder_book.svg"
 
 interface BookFormProps {
   initialValues?: BookFormData;
@@ -252,7 +252,7 @@ const BookForm: React.FC<BookFormProps> = ({
               onChange={formik.handleChange}
               error={formik.touched.image && Boolean(formik.errors.image)}
               helperText={formik.touched.image && formik.errors.image}
-              placeholder='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop'
+              placeholder= {`${placeholder}`}
             />
           </div>
         </div>

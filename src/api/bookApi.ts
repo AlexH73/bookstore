@@ -1,6 +1,6 @@
-// src/api/bookApi.ts - ФИНАЛЬНАЯ АДАПТИРОВАННАЯ ВЕРСИЯ
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Book, LocalBook } from '../types/book';
+import bookImage from '../assets/images/book.jpeg';
 
 // Интерфейс для книги из API
 interface ApiBook {
@@ -62,37 +62,34 @@ export const bookApi = createApi({
     getBestsellers: builder.query<Book[], void>({
       query: () => 'data.json',
       transformResponse: (response: ApiBook[]) => {
-        console.log('Total API books for bestsellers:', response.length);
+        // Преобразуем и сортируем по рейтингу (по убыванию)
 
         // Преобразуем и фильтруем бестселлеры
-        const allBooks = response.map((apiBook: ApiBook, index: number) => ({
-          id: apiBook.id.toString(),
-          title: apiBook.title,
-          author: apiBook.author,
-          price: apiBook.price,
-          rating: apiBook.rating,
-          image: apiBook.cover_url,
-          category: apiBook.genre[0] || 'Fiction',
-          description: apiBook.annotation,
-          isbn: apiBook.isbn,
-          pages: 300,
-          publisher: 'Unknown Publisher',
-          publicationDate: `${apiBook.publication_year}-01-01`,
-          language: apiBook.language,
-          bestseller: true, // Помечаем как бестселлер
-          sale: false,
-          salePrice: apiBook.price,
-          stock: apiBook.stock,
-          tags: apiBook.genre,
-        }));
-
-        // Сортируем по рейтингу и берем топ-8
-        const bestsellers = [...allBooks]
+        const allBooks = response
+          .map((apiBook: ApiBook, _index: number) => ({
+            id: apiBook.id.toString(),
+            title: apiBook.title,
+            author: apiBook.author,
+            price: apiBook.price,
+            rating: apiBook.rating,
+            image: apiBook.cover_url,
+            category: apiBook.genre[0] || 'Fiction',
+            description: apiBook.annotation,
+            isbn: apiBook.isbn,
+            pages: 300,
+            publisher: 'Unknown Publisher',
+            publicationDate: `${apiBook.publication_year}-01-01`,
+            language: apiBook.language,
+            bestseller: true, // Помечаем как бестселлер
+            sale: false,
+            salePrice: apiBook.price,
+            stock: apiBook.stock,
+            tags: apiBook.genre,
+          }))
           .sort((a, b) => b.rating - a.rating)
-          .slice(0, 8);
+          .slice(0, 20); // Берем топ-20
 
-        console.log('Top 8 bestsellers by rating:', bestsellers.length);
-        return bestsellers;
+        return allBooks;
       },
       providesTags: ['Bestsellers'],
     }),
@@ -156,7 +153,7 @@ export const bookApi = createApi({
           };
         }
       },
-      providesTags: (result, error, id) => [{ type: 'Books', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Books', id }],
     }),
 
     // Получение локальных книг (остается без изменений)
@@ -200,6 +197,12 @@ export const bookApi = createApi({
             isLocal: true,
             rating: book.rating || 0,
             stock: book.stock || 10,
+            price: book.price || 0,
+            category: book.category || 'Other',
+            image: book.image || `${bookImage}`,
+            author: book.author || 'Unknown Author',
+            title: book.title || 'Untitled Book',
+            tags: [],
           } as LocalBook;
 
           localBooks.push(newBook);

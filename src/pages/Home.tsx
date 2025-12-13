@@ -1,21 +1,18 @@
 import React from 'react';
 import {
   ArrowForward,
-  Star,
-  FavoriteBorder,
   LocalFireDepartment,
-  AddShoppingCart,
   TrendingUp,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { translationsHome } from '../features/language/translationsHome';
 import BookCard from '../components/ui/BookCard';
-// import { BookDetails } from './BookCatalog/BookInfo';
 import { useGetBestsellersQuery } from '../api/bookApi';
 import { type Book } from '../types/book';
 import { CircularProgress, Alert } from '@mui/material';
-// import { BooksList } from './BookCatalog/BooksList';
+import heroImage from '../assets/images/book_hero.jpeg';
+import readingImage from '../assets/images/reading.jpeg';
 
 const Home: React.FC = () => {
   const currentLanguage = useAppSelector(
@@ -25,53 +22,7 @@ const Home: React.FC = () => {
 
   const { data: bestsellers = [], isLoading, error } = useGetBestsellersQuery();
 
-  // const featuredBooks = [
-  //   {
-  //     id: 1,
-  //     title: 'The Midnight Library',
-  //     author: 'Matt Haig',
-  //     price: 24.99,
-  //     rating: 4.5,
-  //     image:
-  //       'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop',
-  //     category: 'Fiction',
-  //     bestseller: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Atomic Habits',
-  //     author: 'James Clear',
-  //     price: 19.99,
-  //     rating: 4.8,
-  //     image:
-  //       'https://images.unsplash.com/photo-1532012197267-da84d127e765?w-400&h=600&fit=crop',
-  //     category: 'Self-Help',
-  //     bestseller: true,
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Project Hail Mary',
-  //     author: 'Andy Weir',
-  //     price: 27.99,
-  //     rating: 4.7,
-  //     image:
-  //       'https://images.unsplash.com/photo-1531346688376-ab6275c4725e?w=400&h=600&fit=crop',
-  //     category: 'Sci-Fi',
-  //     newRelease: true,
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'The Thursday Murder Club',
-  //     author: 'Richard Osman',
-  //     price: 22.99,
-  //     rating: 4.4,
-  //     image:
-  //       'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop',
-  //     category: 'Mystery',
-  //     sale: true,
-  //     salePrice: 18.99,
-  //   },
-  // ];
+  const homeBestsellers = bestsellers.slice(0, 4);
 
   const categories = [
     {
@@ -136,7 +87,7 @@ const Home: React.FC = () => {
             <div className='hidden md:block px-18'>
               <div className='relative'>
                 <img
-                  src='https://images.unsplash.com/photo-1589998059171-988d887df646?w=800&h=600&fit=crop'
+                  src={`${heroImage}`}
                   alt='Books Collection'
                   className='rounded-2xl shadow-2xl'
                 />
@@ -207,7 +158,7 @@ const Home: React.FC = () => {
           </Alert>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
-            {bestsellers.map((book: Book) => (
+            {homeBestsellers.map((book: Book) => (
               <BookCard
                 key={book.id}
                 book={book}
@@ -240,7 +191,7 @@ const Home: React.FC = () => {
             </div>
             <div className='hidden md:block'>
               <img
-                src='https://images.unsplash.com/photo-1497636577773-f1231844b336?w=600&h=400&fit=crop'
+                src={`${readingImage}`}
                 alt='Reading'
                 className='rounded-xl shadow-lg'
               />

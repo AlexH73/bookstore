@@ -5,7 +5,7 @@ export interface NavTranslations {
   fiction: string;
   nonFiction: string;
   children: string;
-  ebooks: string;
+  catalog: string;
   audioBooks: string;
   gifts: string;
   sale: string;
@@ -24,10 +24,7 @@ export interface HeaderTranslations {
   nav: NavTranslations;
 }
 
-export const translationsHeader: Record<
-  Language,
-  { header: HeaderTranslations }
-> = {
+export const translationsHeader: Record<Language, { header: HeaderTranslations }> = {
   ru: {
     header: {
       promo: 'Бесплатная доставка для заказов от €25',
@@ -38,13 +35,13 @@ export const translationsHeader: Record<
       subscribe: 'Подписаться',
       menu: 'Меню',
       more: 'Еще',
-      logoSubtitle: 'Книжный интернет-магазин',
+      logoSubtitle: 'Онлайн-магазин',
       nav: {
         bestseller: 'Бестселлеры',
         fiction: 'Художественная',
         nonFiction: 'Нон-фикшн',
         children: 'Детям',
-        ebooks: 'Эл. книги',
+        catalog: 'Каталог',
         audioBooks: 'Аудиокниги',
         gifts: 'Подарки',
         sale: 'Распродажа',
@@ -67,7 +64,7 @@ export const translationsHeader: Record<
         fiction: 'Fiction',
         nonFiction: 'Non-Fiction',
         children: 'Children',
-        ebooks: 'eBooks',
+        catalog: 'Catalog',
         audioBooks: 'Audio Books',
         gifts: 'Gifts',
         sale: 'Sale',
@@ -90,7 +87,7 @@ export const translationsHeader: Record<
         fiction: 'Belletristik',
         nonFiction: 'Sachbücher',
         children: 'Kinder',
-        ebooks: 'eBooks',
+        catalog: 'Katalog',
         audioBooks: 'Hörbücher',
         gifts: 'Geschenke',
         sale: 'im Angebot',

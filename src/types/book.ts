@@ -17,13 +17,14 @@ export interface Book {
   salePrice?: number;
   tags?: string[];
   stock?: number;
+  isLocal?: boolean;
 }
 
 export interface LocalBook extends Book {
   localId?: string;
   addedBy?: string;
   addedAt?: string;
-  isLocal?: boolean;
+  isLocal: boolean;
 }
 
 export interface BookFormData {
@@ -42,6 +43,5 @@ export interface BookFormData {
   bestseller: boolean;
   sale: boolean;
   salePrice: number;
-  tags: string[];
   stock: number;
 }

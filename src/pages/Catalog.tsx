@@ -5,7 +5,6 @@ import {
   Search,
   GridView,
   ViewList,
-  ArrowForward,
 } from '@mui/icons-material';
 import {
   Select,
