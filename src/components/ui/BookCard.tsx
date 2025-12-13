@@ -67,7 +67,7 @@ const BookCard: React.FC<BookCardProps> = ({
         {/* Badges */}
         <div className='absolute top-3 left-3 flex flex-col gap-1'>
           {book.bestseller && (
-            <span className='bg-secondary text-white px-2 py-1 rounded text-xs font-semibold'>
+            <span className='bg-gray-400 text-white px-2 py-1 rounded text-xs font-semibold'>
               {t.bestseller || 'Bestseller'}
             </span>
           )}
@@ -111,7 +111,7 @@ const BookCard: React.FC<BookCardProps> = ({
         </div>
 
         <Link to={`/book/${book.id}`}>
-          <h3 className='font-semibold text-lg mb-1 line-clamp-1 hover:text-primary transition-colors dark:text-gray-200'>
+          <h3 className='font-semibold text-lg mb-1 line-clamp-1 hover:text-primary transition-colors dark:text-gray-400'>
             {book.title}
           </h3>
         </Link>
@@ -152,7 +152,7 @@ const BookCard: React.FC<BookCardProps> = ({
                 </p>
               </>
             ) : (
-              <p className='font-bold text-lg dark:text-gray-200'>
+              <p className='font-bold text-lg dark:text-gray-400'>
                 €{book.price.toFixed(2)}
               </p>
             )}
@@ -162,7 +162,7 @@ const BookCard: React.FC<BookCardProps> = ({
         {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
-          className='bg-primary text-white w-full py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center justify-center gap-2'
+          className='bg-primary dark:text-gray-300 w-full py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center justify-center gap-2'
         >
           <AddShoppingCart className='w-5 h-5' />
           {t.addToCart}

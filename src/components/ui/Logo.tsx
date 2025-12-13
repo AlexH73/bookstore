@@ -41,8 +41,8 @@ const Logo: React.FC<LogoProps> = ({
   if (variant === 'text') {
     return (
       <div className={`flex items-center ${className}`}>
-        <span className='text-2xl font-bold text-primary font-serif'>
-          Book<span className='text-secondary'>Store</span>
+        <span className='text-2xl font-bold text-foreground font-serif'>
+          Book<span className='text-foreground'>Store</span>
         </span>
       </div>
     );
@@ -60,11 +60,11 @@ const Logo: React.FC<LogoProps> = ({
           <path d='M8 12h24v3H8z' fill='#1a237e' opacity='0.2' />
         </svg>
       </div>
-      <div>
-        <h1 className='text-2xl font-bold text-primary font-serif leading-tight'>
+      <div className='hidden sm:inline'>
+        <h1 className='text-2xl font-bold text-muted-foreground font-serif leading-tight'>
           BookStore
         </h1>
-        <p className='text-xs text-gray-500'>{t.logoSubtitle}</p>
+        <p className='text-xs text-muted-foreground'>{t.logoSubtitle}</p>
       </div>
     </div>
   );
