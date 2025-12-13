@@ -6,7 +6,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
-import { translationsHome } from '../features/language/translationsHome';
+import { translations } from '../features/language/translations';
 import BookCard from '../components/ui/BookCard';
 import { useGetBestsellersQuery } from '../api/bookApi';
 import { type Book } from '../types/book';
@@ -18,7 +18,7 @@ const Home: React.FC = () => {
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   );
-  const t = translationsHome[currentLanguage].home;
+  const t = translations[currentLanguage].home;
 
   const { data: bestsellers = [], isLoading, error } = useGetBestsellersQuery();
 
@@ -154,7 +154,7 @@ const Home: React.FC = () => {
           </div>
         ) : error ? (
           <Alert severity='error' className='mb-6'>
-            Ошибка загрузки книг
+            {t.bestsellersError}
           </Alert>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>

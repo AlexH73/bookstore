@@ -3,9 +3,16 @@ import { useGetBestsellersQuery } from '../api/bookApi';
 import BookCard from '../components/ui/BookCard';
 import { type Book } from '../types/book';
 import { CircularProgress, Alert } from '@mui/material';
+import { useAppSelector } from '../app/hooks';
+import { translations } from '../features/language/translations';
 
 const Bestseller: React.FC = () => {
   const { data: bestsellers = [], isLoading, error } = useGetBestsellersQuery();
+
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translations[currentLanguage].bestseller;
 
   if (isLoading) {
     return (
@@ -19,7 +26,7 @@ const Bestseller: React.FC = () => {
     return (
       <div className='container-custom py-12'>
         <Alert severity='error'>
-          Failed to load bestsellers. Please try again later.
+          {t.error}
         </Alert>
       </div>
     );
@@ -27,9 +34,9 @@ const Bestseller: React.FC = () => {
 
   return (
     <div className='container-custom py-8 px-10'>
-      <h1 className='text-4xl font-bold mb-2'>Bestsellers</h1>
+      <h1 className='text-4xl font-bold mb-2'>{t.title}</h1>
       <p className='text-gray-600 mb-8'>
-        Our top-rated books based on customer reviews
+        {t.subtitle}
       </p>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>

@@ -20,6 +20,7 @@ import { useGetBooksQuery, useGetLocalBooksQuery } from '../api/bookApi';
 import BookCard from '../components/ui/BookCard';
 import { type Book } from '../types/book';
 import { useAppSelector } from '../app/hooks';
+import { translations } from '../features/language/translations';
 
 const Catalog: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -27,6 +28,11 @@ const Catalog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
   const [sortBy, setSortBy] = useState<'title' | 'price' | 'rating'>('title');
+
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translations[currentLanguage].catalog;
 
   // Fetch data with RTK Query
   const {
@@ -85,7 +91,7 @@ const Catalog: React.FC = () => {
     return (
       <div className='container-custom py-12'>
         <Alert severity='error' className='mb-4'>
-          Error loading books from API
+          {t.error}
         </Alert>
       </div>
     );
@@ -95,8 +101,8 @@ const Catalog: React.FC = () => {
     <div className='container-custom py-8 px-10'>
       {/* Header */}
       <div className='mb-8'>
-        <h1 className='text-4xl font-bold mb-2'>Book Catalog</h1>
-        <p className='text-gray-600'>Total books: {allBooks.length}</p>
+        <h1 className='text-4xl font-bold mb-2'>{t.title}</h1>
+        <p className='text-gray-600'>{t.totalBooks}: {allBooks.length}</p>
       </div>
 
       {/* Search and Controls */}
@@ -106,7 +112,7 @@ const Catalog: React.FC = () => {
             <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' />
             <input
               type='text'
-              placeholder='Search books or authors...'
+              placeholder={t.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200'
@@ -116,36 +122,34 @@ const Catalog: React.FC = () => {
 
         <div className='flex gap-4'>
           <FormControl fullWidth>
-            <InputLabel>Sort By</InputLabel>
+            <InputLabel>{t.sortBy}</InputLabel>
             <Select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              label='Sort By'
+              label={t.sortBy}
               className='bg-white dark:bg-gray-800'
             >
-              <MenuItem value='title'>Title</MenuItem>
-              <MenuItem value='price'>Price</MenuItem>
-              <MenuItem value='rating'>Rating</MenuItem>
+              <MenuItem value='title'>{t.sortOptions.title}</MenuItem>
+              <MenuItem value='price'>{t.sortOptions.price}</MenuItem>
+              <MenuItem value='rating'>{t.sortOptions.rating}</MenuItem>
             </Select>
           </FormControl>
 
           <div className='flex border border-gray-300 rounded-lg overflow-hidden dark:border-gray-700'>
             <button
-              className={`p-2 ${
-                viewMode === 'grid'
+              className={`p-2 ${viewMode === 'grid'
                   ? 'bg-primary text-white'
                   : 'bg-white dark:bg-gray-800'
-              }`}
+                }`}
               onClick={() => setViewMode('grid')}
             >
               <GridView />
             </button>
             <button
-              className={`p-2 ${
-                viewMode === 'list'
+              className={`p-2 ${viewMode === 'list'
                   ? 'bg-primary text-white'
                   : 'bg-white dark:bg-gray-800'
-              }`}
+                }`}
               onClick={() => setViewMode('list')}
             >
               <ViewList />
@@ -160,24 +164,23 @@ const Catalog: React.FC = () => {
           <div className='bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm'>
             <div className='flex items-center gap-2 mb-6'>
               <FilterList />
-              <h3 className='font-semibold text-lg'>Filters</h3>
+              <h3 className='font-semibold text-lg'>{t.filters.title}</h3>
             </div>
 
             {/* Categories */}
             <div className='mb-6'>
-              <h4 className='font-medium mb-3'>Categories</h4>
+              <h4 className='font-medium mb-3'>{t.filters.categories}</h4>
               <div className='flex flex-wrap gap-2'>
                 {categories.map((category) => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      selectedCategory === category
+                    className={`px-3 py-1 rounded-full text-sm ${selectedCategory === category
                         ? 'bg-primary text-white'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                    }`}
+                      }`}
                   >
-                    {category}
+                    {category === 'all' ? 'All' : category}
                   </button>
                 ))}
               </div>
@@ -185,7 +188,7 @@ const Catalog: React.FC = () => {
 
             {/* Price Range */}
             <div className='mb-6'>
-              <h4 className='font-medium mb-3'>Price Range</h4>
+              <h4 className='font-medium mb-3'>{t.filters.priceRange}</h4>
               <div className='px-2'>
                 <Slider
                   value={priceRange}
@@ -211,7 +214,7 @@ const Catalog: React.FC = () => {
               to='/books/add'
               className='block w-full bg-primary text-white text-center py-3 rounded-lg hover:bg-primary-dark transition-colors'
             >
-              Add New Book
+              {t.addNewBook}
             </Link>
           )}
         </div>
@@ -220,14 +223,14 @@ const Catalog: React.FC = () => {
         <div className='lg:col-span-3'>
           <div className='mb-6'>
             <Chip
-              label={`Found: ${sortedBooks.length} books`}
+              label={t.foundBooks.replace('{count}', sortedBooks.length.toString())}
               className='bg-primary text-white'
             />
           </div>
 
           {sortedBooks.length === 0 ? (
             <div className='text-center py-12'>
-              <p className='text-gray-500 text-lg'>No books found</p>
+              <p className='text-gray-500 text-lg'>{t.noBooksFound}</p>
             </div>
           ) : (
             <div

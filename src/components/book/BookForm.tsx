@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,40 +18,42 @@ import {
   useUpdateLocalBookMutation,
 } from '../../api/bookApi';
 import { type BookFormData } from '../../types/book';
-import { useCurrentUser, useIsAdmin } from '../../app/hooks';
+import { useCurrentUser, useIsAdmin, useAppSelector } from '../../app/hooks';
 import placeholder from "../../assets/placeholder_book.svg"
+import { translations } from '../../features/language/translations';
+import type { BookFormTranslations } from '../../features/language/types';
 
 interface BookFormProps {
   initialValues?: BookFormData;
   isEdit?: boolean;
 }
 
-const validationSchema = Yup.object({
-  title: Yup.string().required('Title is required'),
-  author: Yup.string().required('Author is required'),
+const getValidationSchema = (t: BookFormTranslations) => Yup.object({
+  title: Yup.string().required(t.errors.required),
+  author: Yup.string().required(t.errors.required),
   price: Yup.number()
-    .min(0, 'Price cannot be negative')
-    .required('Price is required'),
+    .min(0, t.errors.negativePrice)
+    .required(t.errors.required),
   rating: Yup.number()
-    .min(0, 'Rating must be between 0 and 5')
-    .max(5, 'Rating must be between 0 and 5'),
-  image: Yup.string().url('Invalid URL').required('Image URL is required'),
-  category: Yup.string().required('Category is required'),
+    .min(0, t.errors.ratingRange)
+    .max(5, t.errors.ratingRange),
+  image: Yup.string().url(t.errors.invalidUrl).required(t.errors.required),
+  category: Yup.string().required(t.errors.required),
   description: Yup.string(),
   isbn: Yup.string(),
-  pages: Yup.number().min(1, 'Minimum 1 page'),
+  pages: Yup.number().min(1, t.errors.minPages),
   publisher: Yup.string(),
   publicationDate: Yup.string(),
   language: Yup.string(),
   bestseller: Yup.boolean(),
   sale: Yup.boolean(),
   salePrice: Yup.number()
-    .min(0, 'Sale price cannot be negative')
+    .min(0, t.errors.negativePrice)
     .when('sale', {
       is: true,
-      then: (schema) => schema.required('Sale price is required'),
+      then: (schema) => schema.required(t.errors.required),
     }),
-  stock: Yup.number().min(0, 'Stock cannot be negative'),
+  stock: Yup.number().min(0, t.errors.negativeStock),
 });
 
 const BookForm: React.FC<BookFormProps> = ({
@@ -63,8 +65,17 @@ const BookForm: React.FC<BookFormProps> = ({
   const currentUser = useCurrentUser();
   const isAdminUser = useIsAdmin();
 
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translations[currentLanguage];
+  const tForm = t.bookForm;
+  const tHome = t.home;
+
   const [addBook, { isLoading: isAdding }] = useAddLocalBookMutation();
   const [updateBook, { isLoading: isUpdating }] = useUpdateLocalBookMutation();
+
+  const validationSchema = useMemo(() => getValidationSchema(tForm), [tForm]);
 
   const formik = useFormik({
     initialValues: initialValues || {
@@ -79,7 +90,7 @@ const BookForm: React.FC<BookFormProps> = ({
       pages: 0,
       publisher: '',
       publicationDate: new Date().toISOString().split('T')[0],
-      language: 'English',
+      language: tForm.languages.english,
       bestseller: false,
       sale: false,
       salePrice: 0,
@@ -96,50 +107,50 @@ const BookForm: React.FC<BookFormProps> = ({
           const book = localBooks.find((b: any) => b.id === id);
 
           if (book && book.addedBy !== currentUser?.email && !isAdminUser) {
-            alert('You can only edit your own books');
+            alert(tForm.errors.onlyOwnBooks);
             return;
           }
 
           await updateBook({ id, updates: values }).unwrap();
-          alert('Book updated successfully!');
+          alert(tForm.success.updated);
         } else {
           await addBook(values).unwrap();
-          alert('Book added successfully!');
+          alert(tForm.success.added);
         }
         navigate('/catalog');
       } catch (error) {
         console.error('Error saving book:', error);
-        alert('Error saving book. Please try again.');
+        alert(tForm.errors.saveError);
       }
     },
   });
 
   const categories = [
-    'Fiction',
-    'Non-Fiction',
-    'Science',
-    'Business',
-    'Children',
-    'Romance',
-    'Fantasy',
-    'Mystery',
-    'Biography',
-    'History',
+    tHome.categories.fiction,
+    tHome.categories.nonFiction,
+    tHome.categories.science,
+    tHome.categories.business,
+    tHome.categories.children,
+    tHome.categories.romance,
+    tHome.categories.fantasy,
+    tHome.categories.mystery,
+    tHome.categories.biography,
+    tHome.categories.history,
   ];
 
   const languages = [
-    'English',
-    'German',
-    'French',
-    'Spanish',
-    'Russian',
-    'Chinese',
+    tForm.languages.english,
+    tForm.languages.german,
+    tForm.languages.french,
+    tForm.languages.spanish,
+    tForm.languages.russian,
+    tForm.languages.chinese,
   ];
 
   if (!currentUser?.isAuthenticated) {
     return (
       <div className='container-custom mt-8 px-10'>
-        <Alert severity='warning'>You need to be logged in to add books</Alert>
+        <Alert severity='warning'>{tForm.errors.loginRequired}</Alert>
       </div>
     );
   }
@@ -152,7 +163,7 @@ const BookForm: React.FC<BookFormProps> = ({
     if (book && book.addedBy !== currentUser?.email) {
       return (
         <div className='container-custom mt-8 px-10'>
-          <Alert severity='error'>You can only edit your own books</Alert>
+          <Alert severity='error'>{tForm.errors.onlyOwnBooks}</Alert>
         </div>
       );
     }
@@ -161,23 +172,23 @@ const BookForm: React.FC<BookFormProps> = ({
   return (
     <div className='container-custom py-8 px-10 max-w-4xl mx-auto'>
       <h1 className='text-4xl font-bold mb-2'>
-        {isEdit ? 'Edit Book' : 'Add New Book'}
+        {isEdit ? tForm.titleEdit : tForm.titleAdd}
       </h1>
       <p className='text-gray-600 mb-8'>
         {isEdit
-          ? 'Update book information'
-          : 'Fill in the details to add a new book'}
+          ? tForm.subtitleEdit
+          : tForm.subtitleAdd}
       </p>
 
       <form onSubmit={formik.handleSubmit} className='space-y-8'>
         {/* Basic Information */}
         <div className='bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm'>
-          <h2 className='text-xl font-semibold mb-6'>Basic Information</h2>
+          <h2 className='text-xl font-semibold mb-6'>{tForm.sections.basicInfo}</h2>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             <TextField
               fullWidth
-              label='Title *'
+              label={`${tForm.labels.title} *`}
               name='title'
               value={formik.values.title}
               onChange={formik.handleChange}
@@ -188,7 +199,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Author *'
+              label={`${tForm.labels.author} *`}
               name='author'
               value={formik.values.author}
               onChange={formik.handleChange}
@@ -198,7 +209,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Price (€) *'
+              label={`${tForm.labels.price} *`}
               name='price'
               type='number'
               value={formik.values.price}
@@ -210,7 +221,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Rating (0-5)'
+              label={tForm.labels.rating}
               name='rating'
               type='number'
               value={formik.values.rating}
@@ -224,12 +235,12 @@ const BookForm: React.FC<BookFormProps> = ({
               fullWidth
               error={formik.touched.category && Boolean(formik.errors.category)}
             >
-              <InputLabel>Category *</InputLabel>
+              <InputLabel>{tForm.labels.category} *</InputLabel>
               <Select
                 name='category'
                 value={formik.values.category}
                 onChange={formik.handleChange}
-                label='Category *'
+                label={`${tForm.labels.category} *`}
               >
                 {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>
@@ -246,40 +257,40 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Image URL *'
+              label={`${tForm.labels.image} *`}
               name='image'
               value={formik.values.image}
               onChange={formik.handleChange}
               error={formik.touched.image && Boolean(formik.errors.image)}
               helperText={formik.touched.image && formik.errors.image}
-              placeholder= {`${placeholder}`}
+              placeholder={`${placeholder}`}
             />
           </div>
         </div>
 
         {/* Description */}
         <div className='bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm'>
-          <h2 className='text-xl font-semibold mb-6'>Description</h2>
+          <h2 className='text-xl font-semibold mb-6'>{tForm.sections.description}</h2>
           <TextField
             fullWidth
-            label='Description'
+            label={tForm.labels.description}
             name='description'
             multiline
             rows={4}
             value={formik.values.description}
             onChange={formik.handleChange}
-            placeholder='Enter book description...'
+            placeholder={tForm.labels.description}
           />
         </div>
 
         {/* Additional Information */}
         <div className='bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm'>
-          <h2 className='text-xl font-semibold mb-6'>Additional Information</h2>
+          <h2 className='text-xl font-semibold mb-6'>{tForm.sections.additionalInfo}</h2>
 
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
             <TextField
               fullWidth
-              label='ISBN'
+              label={tForm.labels.isbn}
               name='isbn'
               value={formik.values.isbn}
               onChange={formik.handleChange}
@@ -287,7 +298,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Number of Pages'
+              label={tForm.labels.pages}
               name='pages'
               type='number'
               value={formik.values.pages}
@@ -297,7 +308,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Stock Quantity'
+              label={tForm.labels.stock}
               name='stock'
               type='number'
               value={formik.values.stock}
@@ -309,7 +320,7 @@ const BookForm: React.FC<BookFormProps> = ({
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             <TextField
               fullWidth
-              label='Publisher'
+              label={tForm.labels.publisher}
               name='publisher'
               value={formik.values.publisher}
               onChange={formik.handleChange}
@@ -317,7 +328,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
             <TextField
               fullWidth
-              label='Publication Date'
+              label={tForm.labels.publicationDate}
               name='publicationDate'
               type='date'
               value={formik.values.publicationDate}
@@ -326,12 +337,12 @@ const BookForm: React.FC<BookFormProps> = ({
             />
 
             <FormControl fullWidth>
-              <InputLabel>Language</InputLabel>
+              <InputLabel>{tForm.labels.language}</InputLabel>
               <Select
                 name='language'
                 value={formik.values.language}
                 onChange={formik.handleChange}
-                label='Language'
+                label={tForm.labels.language}
               >
                 {languages.map((lang) => (
                   <MenuItem key={lang} value={lang}>
@@ -345,7 +356,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
         {/* Flags */}
         <div className='bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm'>
-          <h2 className='text-xl font-semibold mb-6'>Flags</h2>
+          <h2 className='text-xl font-semibold mb-6'>{tForm.sections.flags}</h2>
 
           <div className='flex flex-wrap gap-8'>
             <FormControlLabel
@@ -357,7 +368,7 @@ const BookForm: React.FC<BookFormProps> = ({
                   color='primary'
                 />
               }
-              label='Bestseller'
+              label={tForm.labels.bestseller}
             />
 
             <FormControlLabel
@@ -369,7 +380,7 @@ const BookForm: React.FC<BookFormProps> = ({
                   color='secondary'
                 />
               }
-              label='On Sale'
+              label={tForm.labels.sale}
             />
           </div>
 
@@ -377,7 +388,7 @@ const BookForm: React.FC<BookFormProps> = ({
             <div className='mt-6'>
               <TextField
                 fullWidth
-                label='Sale Price (€) *'
+                label={`${tForm.labels.salePrice} *`}
                 name='salePrice'
                 type='number'
                 value={formik.values.salePrice}
@@ -403,10 +414,10 @@ const BookForm: React.FC<BookFormProps> = ({
             {isAdding || isUpdating ? (
               <>
                 <CircularProgress size={20} color='inherit' />
-                {isEdit ? 'Updating...' : 'Adding...'}
+                {isEdit ? tForm.buttons.updating : tForm.buttons.adding}
               </>
             ) : (
-              <>{isEdit ? 'Update Book' : 'Add Book'}</>
+              <>{isEdit ? tForm.buttons.update : tForm.buttons.add}</>
             )}
           </button>
 
@@ -415,7 +426,7 @@ const BookForm: React.FC<BookFormProps> = ({
             onClick={() => navigate(-1)}
             className='px-8 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors'
           >
-            Cancel
+            {tForm.buttons.cancel}
           </button>
         </div>
       </form>

@@ -13,11 +13,8 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { translationsHeader } from '../../features/language/translationsHeader';
-import {
-  setLanguage,
-  type Language,
-} from '../../features/language/languageSlice';
+import { translations } from '../../features/language/translations';
+import { setLanguage, type Language } from '../../features/language/languageSlice';
 import ThemeToggle from '../ui/ThemeToggle';
 import Logo from '../ui/Logo';
 import LanguageToggle from '../ui/LanguageToggle';
@@ -34,7 +31,7 @@ const Header: React.FC = () => {
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   );
-  const t = translationsHeader[currentLanguage].header;
+  const t = translations[currentLanguage].header;
 
   const handleLanguageChange = (lang: Language) => {
     dispatch(setLanguage(lang));
