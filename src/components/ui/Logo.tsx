@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector } from '../../app/hooks';
-import { translationsHeader } from '../../features/language/translationsHeader';
+import { translations } from '../../features/language/translations';
 
 interface LogoProps {
   variant?: 'full' | 'icon' | 'text';
@@ -16,7 +16,7 @@ const Logo: React.FC<LogoProps> = ({
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   );
-  const t = translationsHeader[currentLanguage].header;
+  const t = translations[currentLanguage].header;
 
   const sizeClasses = {
     sm: 'h-8',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppSelector } from '../app/hooks';
 
 import {
   Person,
@@ -15,37 +16,50 @@ import {
   Security,
 } from '@mui/icons-material';
 
+import { translations } from '../features/language/translations';
+
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  // const { translationsAuth } = useAppSelector((state) => state.language);
+  const t = translations[currentLanguage].auth.dashboard;
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
+  const getLocaleForDate = () => {
+    if (currentLanguage === 'ru') return 'ru-RU';
+    if (currentLanguage === 'de') return 'de-DE';
+    return 'en-US';
+  };
+
   const stats = [
-    { icon: <Book />, label: 'Books Read', value: '12', color: 'text-primary' },
+    { icon: <Book />, label: t.stats.booksRead, value: '12', color: 'text-primary' },
     {
       icon: <ShoppingCart />,
-      label: 'Orders',
+      label: t.stats.orders,
       value: '5',
       color: 'text-secondary',
     },
-    { icon: <Star />, label: 'Reviews', value: '8', color: 'text-warning' },
+    { icon: <Star />, label: t.stats.reviews, value: '8', color: 'text-warning' },
     {
       icon: <FavoriteBorder />,
-      label: 'Wishlist',
+      label: t.stats.wishlist,
       value: '23',
       color: 'text-accent',
     },
   ];
 
   const quickActions = [
-    { icon: <ShoppingCart />, label: 'Continue Shopping', to: '/catalog' },
-    { icon: <History />, label: 'Order History', to: '/orders' },
-    { icon: <FavoriteBorder />, label: 'My Wishlist', to: '/wishlist' },
-    { icon: <Settings />, label: 'Account Settings', to: '/settings' },
+    { icon: <ShoppingCart />, label: t.quickActions.continueShopping, to: '/catalog' },
+    { icon: <History />, label: t.quickActions.orderHistory, to: '/orders' },
+    { icon: <FavoriteBorder />, label: t.quickActions.myWishlist, to: '/wishlist' },
+    { icon: <Settings />, label: t.quickActions.accountSettings, to: '/settings' },
   ];
 
   return (
@@ -56,10 +70,10 @@ const Dashboard: React.FC = () => {
           className='hover:text-primary cursor-pointer'
           onClick={() => navigate('/')}
         >
-          Home
+          {t.home}
         </span>
         <span className='mx-2'>/</span>
-        <span className='text-foreground font-semibold'>Dashboard</span>
+        <span className='text-foreground font-semibold'>{t.title}</span>
       </div>
 
       {/* Header Banner */}
@@ -72,11 +86,11 @@ const Dashboard: React.FC = () => {
 
             <div>
               <h1 className='text-3xl font-bold'>
-                Welcome back, {user?.name || user?.email?.split('@')[0]}!
+                {t.welcomeMessage.replace('{name}', user?.name || user?.email?.split('@')[0] || '')}
               </h1>
               <p className='opacity-80 mt-1'>
-                Member since{' '}
-                {new Date().toLocaleDateString('en-US', {
+                {t.memberSince}{' '}
+                {new Date().toLocaleDateString(getLocaleForDate(), {
                   month: 'long',
                   year: 'numeric',
                 })}
@@ -89,7 +103,7 @@ const Dashboard: React.FC = () => {
             className='flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-lg transition-colors'
           >
             <Logout className='w-5 h-5' />
-            <span>Sign Out</span>
+            <span>{t.logoutButton}</span>
           </button>
         </div>
       </div>
@@ -113,7 +127,7 @@ const Dashboard: React.FC = () => {
           {/* Recent Orders */}
           <div className='card rounded-xl overflow-hidden'>
             <div className='p-6 border-b border-border'>
-              <h2 className='text-xl font-bold'>Recent Orders</h2>
+              <h2 className='text-xl font-bold'>{t.recentOrders}</h2>
             </div>
 
             <div className='p-6'>
@@ -130,16 +144,16 @@ const Dashboard: React.FC = () => {
                         className='w-12 h-16 object-cover rounded-md'
                       />
                       <div>
-                        <h3 className='font-semibold'>Book Title {order}</h3>
+                        <h3 className='font-semibold'>{t.recentOrdersData.bookTitle} {order}</h3>
                         <p className='text-sm text-muted-foreground'>
-                          Order #ORD-2024-{1000 + order}
+                          {t.recentOrdersData.orderNumber} #ORD-2024-{1000 + order}
                         </p>
                       </div>
                     </div>
 
                     <div className='text-right'>
                       <div className='font-bold'>€{19.99 + order}</div>
-                      <div className='text-sm text-success'>Delivered</div>
+                      <div className='text-sm text-success'>{t.delivered}</div>
                     </div>
                   </div>
                 ))}
@@ -149,14 +163,14 @@ const Dashboard: React.FC = () => {
                 onClick={() => navigate('/orders')}
                 className='btn-outline w-full mt-6'
               >
-                View All Orders
+                {t.viewAllOrders}
               </button>
             </div>
           </div>
 
           {/* Quick Actions */}
           <div className='card p-6 rounded-xl'>
-            <h2 className='text-xl font-bold mb-6'>Quick Actions</h2>
+            <h2 className='text-xl font-bold mb-6'>{t.quickActions.title}</h2>
 
             <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
               {quickActions.map((action, index) => (
@@ -179,21 +193,21 @@ const Dashboard: React.FC = () => {
         <div className='space-y-10'>
           {/* Account Info */}
           <div className='card p-6 rounded-xl'>
-            <h2 className='text-xl font-bold mb-6'>Account Information</h2>
+            <h2 className='text-xl font-bold mb-6'>{t.accountInfo.title}</h2>
 
             <div className='space-y-4'>
               <div className='flex justify-between'>
-                <span className='text-muted-foreground'>Email</span>
+                <span className='text-muted-foreground'>{t.accountInfo.email}</span>
                 <span className='font-medium'>{user?.email}</span>
               </div>
 
               <div className='flex justify-between'>
-                <span className='text-muted-foreground'>Account Type</span>
+                <span className='text-muted-foreground'>{t.accountInfo.accountType}</span>
                 <span className='badge-primary'>Premium Reader</span>
               </div>
 
               <div className='flex justify-between'>
-                <span className='text-muted-foreground'>Reading Level</span>
+                <span className='text-muted-foreground'>{t.accountInfo.readingLevel}</span>
                 <span className='font-medium'>Advanced</span>
               </div>
             </div>
@@ -203,21 +217,21 @@ const Dashboard: React.FC = () => {
           <div className='card p-6 rounded-xl'>
             <div className='flex items-center gap-3 mb-6'>
               <Security className='w-6 h-6 text-success' />
-              <h2 className='text-xl font-bold'>Security</h2>
+              <h2 className='text-xl font-bold'>{t.security.title}</h2>
             </div>
 
             <div className='space-y-4'>
               <button className='w-full text-left p-4 border border-border rounded-xl hover:bg-muted transition-colors'>
-                <div className='font-medium'>Change Password</div>
+                <div className='font-medium'>{t.security.changePassword}</div>
                 <div className='text-sm text-muted-foreground'>
-                  Update your password regularly
+                  {t.security.changePasswordDesc}
                 </div>
               </button>
 
               <button className='w-full text-left p-4 border border-border rounded-xl hover:bg-muted transition-colors'>
-                <div className='font-medium'>Two-Factor Authentication</div>
+                <div className='font-medium'>{t.security.twoFactor}</div>
                 <div className='text-sm text-muted-foreground'>
-                  Add an extra layer of security
+                  {t.security.twoFactorDesc}
                 </div>
               </button>
             </div>
@@ -227,31 +241,31 @@ const Dashboard: React.FC = () => {
           <div className='card p-6 rounded-xl'>
             <div className='flex items-center gap-3 mb-6'>
               <LocalShipping className='w-6 h-6 text-primary' />
-              <h2 className='text-xl font-bold'>Shipping & Payment</h2>
+              <h2 className='text-xl font-bold'>{t.shipping.title}</h2>
             </div>
 
             <div className='space-y-4'>
               <button className='w-full text-left p-4 border border-border rounded-xl hover:bg-muted transition-colors'>
                 <div className='flex justify-between'>
                   <div>
-                    <div className='font-medium'>Default Address</div>
+                    <div className='font-medium'>{t.shipping.defaultAddress}</div>
                     <div className='text-sm text-muted-foreground'>
-                      123 Main St, Berlin
+                      {t.shipping.defaultAddressValue}
                     </div>
                   </div>
-                  <span className='text-primary text-sm'>Edit</span>
+                  <span className='text-primary text-sm'>{t.shipping.edit}</span>
                 </div>
               </button>
 
               <button className='w-full text-left p-4 border border-border rounded-xl hover:bg-muted transition-colors'>
                 <div className='flex justify-between'>
                   <div>
-                    <div className='font-medium'>Payment Methods</div>
+                    <div className='font-medium'>{t.shipping.paymentMethods}</div>
                     <div className='text-sm text-muted-foreground'>
-                      •••• 4242 (Visa)
+                      {t.shipping.paymentMethodsValue}
                     </div>
                   </div>
-                  <span className='text-primary text-sm'>Manage</span>
+                  <span className='text-primary text-sm'>{t.shipping.manage}</span>
                 </div>
               </button>
             </div>

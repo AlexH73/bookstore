@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useAppSelector } from '../../app/hooks';
 
 import {
   Email,
@@ -23,10 +24,17 @@ import {
   Button,
 } from '@mui/material';
 
+import { translations } from '../../features/language/translations';
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isLoading, error, clearError } = useAuth();
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  // const { translationsAuth } = useAppSelector((state) => state.language);
+  const t = translations[currentLanguage].auth.login;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,13 +48,13 @@ const Login: React.FC = () => {
     setFormError('');
 
     if (!email || !password) {
-      setFormError('Please fill in all fields');
+      setFormError(t.errors.fillAllFields);
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setFormError('Please enter a valid email address');
+      setFormError(t.errors.validEmail);
       return false;
     }
 
@@ -65,8 +73,7 @@ const Login: React.FC = () => {
   const handleSocialLogin = (provider: 'google' | 'facebook') => {
     console.log(`${provider} login clicked`);
     setFormError(
-      `${
-        provider.charAt(0).toUpperCase() + provider.slice(1)
+      `${provider.charAt(0).toUpperCase() + provider.slice(1)
       } login is not implemented yet`
     );
   };
@@ -79,8 +86,8 @@ const Login: React.FC = () => {
           <div className='mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 shadow-md'>
             <LoginIcon className='w-8 h-8 text-gray-700 dark:text-gray-400' />
           </div>
-          <h2 className='text-3xl font-bold'>Welcome Back</h2>
-          <p className='mt-2 text-muted-foreground'>Sign in to your account</p>
+          <h2 className='text-3xl font-bold'>{t.title}</h2>
+          <p className='mt-2 text-muted-foreground'>{t.subtitle}</p>
         </div>
 
         {/* Social Login */}
@@ -98,7 +105,7 @@ const Login: React.FC = () => {
               '&:hover': { background: 'var(--background)' },
             }}
           >
-            Continue with Google
+            {t.continueWithGoogle}
           </Button>
 
           <Button
@@ -113,7 +120,7 @@ const Login: React.FC = () => {
               '&:hover': { background: 'var(--background)' },
             }}
           >
-            Continue with Facebook
+            {t.continueWithFacebook}
           </Button>
         </div>
 
@@ -123,9 +130,7 @@ const Login: React.FC = () => {
             <div className='w-full border-t border-border' />
           </div>
           <div className='relative flex justify-center text-sm'>
-            <span className='px-4 text-muted-foreground'>
-              Or continue with email
-            </span>
+            <span className='px-4 text-muted-foreground'>{t.divider}</span>
           </div>
         </div>
 
@@ -133,7 +138,7 @@ const Login: React.FC = () => {
         <form className='space-y-6' onSubmit={handleSubmit}>
           {/* Email */}
           <TextField
-            label='Email Address'
+            label={t.emailLabel}
             type='email'
             fullWidth
             value={email}
@@ -149,7 +154,6 @@ const Login: React.FC = () => {
             sx={{
               '& .MuiInputBase-root': {
                 color: 'var(--foreground)',
-                mb: 1.8,
               },
               '& .MuiOutlinedInput-notchedOutline': {
                 borderColor: 'var(--border)',
@@ -177,7 +181,7 @@ const Login: React.FC = () => {
                 '&.Mui-focused': { color: 'var(--primary)' },
               }}
             >
-              Password
+              {t.passwordLabel}
             </InputLabel>
 
             <OutlinedInput
@@ -203,7 +207,7 @@ const Login: React.FC = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label='Password'
+              label={t.passwordLabel}
               sx={{
                 color: 'var(--foreground)',
                 '& .MuiOutlinedInput-notchedOutline': {
@@ -220,15 +224,20 @@ const Login: React.FC = () => {
           </FormControl>
 
           {/* Remember me */}
-          <div className='flex items-center gap-2'>
-            <input
-              id='remember'
-              type='checkbox'
-              className='h-4 w-4 text-primary border-border rounded focus:ring-primary'
-            />
-            <label htmlFor='remember' className='text-sm text-muted-foreground'>
-              Remember me
-            </label>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <input
+                id='remember'
+                type='checkbox'
+                className='h-4 w-4 text-primary border-border rounded focus:ring-primary'
+              />
+              <label htmlFor='remember' className='text-sm text-muted-foreground'>
+                {t.rememberMe}
+              </label>
+            </div>
+            <div className='text-sm'>
+              <Link to='#' className='font-medium text-primary hover:underline'>{t.forgotPasswordLink}</Link>
+            </div>
           </div>
 
           {/* Errors */}
@@ -257,27 +266,27 @@ const Login: React.FC = () => {
               borderRadius: '0.75rem',
             }}
           >
-            {isLoading ? 'Signing in…' : 'Sign In'}
+            {isLoading ? t.loginButtonLoading : t.loginButton}
           </Button>
         </form>
 
         {/* Footer */}
         <div className='text-center'>
           <p className='text-muted-foreground'>
-            Don't have an account?{' '}
+            {t.registerPrompt}{' '}
             <Link to='/register' className='text-primary hover:underline'>
-              Sign up
+              {t.registerLink}
             </Link>
           </p>
 
           <p className='mt-4 text-sm text-muted-foreground'>
-            By continuing, you agree to our{' '}
+            {t.termsIntro}{' '}
             <Link to='/terms' className='text-primary hover:underline'>
-              Terms
-            </Link>{' '}
-            and{' '}
+              {t.termsLink}
+            </Link>
+            {` ${t.and} `}
             <Link to='/privacy' className='text-primary hover:underline'>
-              Privacy Policy
+              {t.privacyLink}
             </Link>
           </p>
         </div>

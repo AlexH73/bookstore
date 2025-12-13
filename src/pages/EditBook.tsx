@@ -5,6 +5,8 @@ import { useGetLocalBooksQuery } from '../api/bookApi';
 import { CircularProgress, Alert, Button } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import type { LocalBook, BookFormData } from '../types/book';
+import { useAppSelector } from '../app/hooks';
+import { translations } from '../features/language/translations';
 
 // Функция преобразования LocalBook в BookFormData
 const convertToFormData = (book: LocalBook): BookFormData => {
@@ -34,6 +36,11 @@ const EditBook: React.FC = () => {
   const navigate = useNavigate();
   const { data: localBooks = [], isLoading } = useGetLocalBooksQuery();
 
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translations[currentLanguage].bookPage;
+
   const book = localBooks.find((b) => b.id === id);
 
   useEffect(() => {
@@ -54,10 +61,10 @@ const EditBook: React.FC = () => {
     return (
       <div className='container-custom py-12 px-10'>
         <Alert severity='error' className='mb-4'>
-          Book not found or you don't have permission to edit it
+          {t.notFound}
         </Alert>
         <Button startIcon={<ArrowBack />} onClick={() => navigate('/catalog')}>
-          Back to Catalog
+          {t.goBack}
         </Button>
       </div>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, FavoriteBorder, AddShoppingCart } from '@mui/icons-material';
 import { useAppSelector } from '../../app/hooks';
-import { translationsBookCard } from '../../features/language/translationsBookCard';
+import { translations } from '../../features/language/translations';
 import { Link } from 'react-router-dom';
 import { useCurrentUser } from '../../app/hooks';
 
@@ -33,7 +33,7 @@ const BookCard: React.FC<BookCardProps> = ({
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   );
-  const t = translationsBookCard[currentLanguage].bookCard;
+  const t = translations[currentLanguage].bookCard;
   const currentUser = useCurrentUser();
 
   const handleAddToCart = () => {

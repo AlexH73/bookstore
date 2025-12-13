@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { useGetBookByIdQuery } from '../api/bookApi';
 import { useAppSelector } from '../app/hooks';
+import { translations } from '../features/language/translations';
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,6 +27,11 @@ const BookPage: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const user = useAppSelector((state) => state.auth.user);
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  const t = translations[currentLanguage].bookPage;
+
   const { data: book, isLoading, error } = useGetBookByIdQuery(id || '');
 
   const handleAddToCart = () => {
@@ -50,14 +56,14 @@ const BookPage: React.FC = () => {
     return (
       <div className='container-custom py-12 px-10'>
         <Alert severity='error' className='mb-4'>
-          Book not found
+          {t.notFound}
         </Alert>
         <Button
           startIcon={<ArrowBack />}
           onClick={() => navigate(-1)}
           className='mt-4'
         >
-          Go Back
+          {t.goBack}
         </Button>
       </div>
     );
@@ -72,7 +78,7 @@ const BookPage: React.FC = () => {
           className='flex items-center gap-2 text-gray-600 hover:text-primary transition-colors'
         >
           <ArrowBack />
-          <span>Back</span>
+          <span>{t.back}</span>
         </button>
       </div>
 
@@ -87,7 +93,7 @@ const BookPage: React.FC = () => {
               className='w-full rounded-xl shadow-lg mb-6'
             />
             {book.isLocal && (
-              <Chip label='Local Book' color='secondary' className='mb-4' />
+              <Chip label={t.localBook} color='secondary' className='mb-4' />
             )}
           </div>
         </div>
@@ -100,7 +106,7 @@ const BookPage: React.FC = () => {
               className='mb-4 bg-gray-100 dark:bg-gray-800'
             />
             <h1 className='text-4xl font-bold mb-3'>{book.title}</h1>
-            <p className='text-xl text-gray-600 mb-6'>by {book.author}</p>
+            <p className='text-xl text-gray-600 mb-6'>{t.by} {book.author}</p>
 
             {/* Rating */}
             <div className='flex items-center gap-2 mb-6'>
@@ -108,11 +114,10 @@ const BookPage: React.FC = () => {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-5 h-5 ${
-                      i < Math.floor(book.rating)
+                    className={`w-5 h-5 ${i < Math.floor(book.rating)
                         ? 'text-yellow-500'
                         : 'text-gray-300'
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
@@ -129,7 +134,7 @@ const BookPage: React.FC = () => {
                   <span className='text-gray-400 line-through text-xl'>
                     €{book.price}
                   </span>
-                  <Chip label='SALE' color='error' />
+                  <Chip label={t.sale} color='error' />
                 </div>
               ) : (
                 <span className='text-4xl font-bold'>€{book.price}</span>
@@ -138,12 +143,12 @@ const BookPage: React.FC = () => {
               {book.stock && book.stock > 0 ? (
                 <Chip
                   icon={<Inventory />}
-                  label={`In stock: ${book.stock}`}
+                  label={t.inStock.replace('{count}', book.stock.toString())}
                   className='bg-green-100 text-green-800'
                 />
               ) : (
                 <Chip
-                  label='Out of stock'
+                  label={t.outOfStock}
                   className='bg-red-100 text-red-800'
                 />
               )}
@@ -157,16 +162,15 @@ const BookPage: React.FC = () => {
                 className='bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
               >
                 <ShoppingCart />
-                Add to Cart
+                {t.addToCart}
               </button>
 
               <button
                 onClick={handleAddToWishlist}
-                className={`p-3 rounded-lg border ${
-                  isFavorite
+                className={`p-3 rounded-lg border ${isFavorite
                     ? 'border-red-500 text-red-500'
                     : 'border-gray-300 text-gray-600 dark:border-gray-700 dark:text-gray-400'
-                } hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}
+                  } hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}
               >
                 {isFavorite ? <Favorite /> : <FavoriteBorder />}
               </button>
@@ -182,7 +186,7 @@ const BookPage: React.FC = () => {
                   className='px-6 py-3 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-colors flex items-center gap-2'
                 >
                   <Edit />
-                  Edit Book
+                  {t.editBook}
                 </button>
               )}
             </div>
@@ -191,15 +195,14 @@ const BookPage: React.FC = () => {
           {/* Tabs */}
           <div className='border-b border-gray-200 dark:border-gray-700 mb-6'>
             <div className='flex space-x-8'>
-              {['Description', 'Details', 'Reviews'].map((tab, index) => (
+              {[t.tabs.description, t.tabs.details, t.tabs.reviews].map((tab, index) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(index)}
-                  className={`pb-4 px-1 font-medium ${
-                    activeTab === index
+                  className={`pb-4 px-1 font-medium ${activeTab === index
                       ? 'border-b-2 border-primary text-primary'
                       : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-                  }`}
+                    }`}
                 >
                   {tab}
                 </button>
@@ -211,9 +214,9 @@ const BookPage: React.FC = () => {
           <div className='mt-6'>
             {activeTab === 0 && (
               <div>
-                <h3 className='text-2xl font-semibold mb-4'>Description</h3>
+                <h3 className='text-2xl font-semibold mb-4'>{t.tabs.description}</h3>
                 <p className='text-gray-600 dark:text-gray-400 whitespace-pre-line'>
-                  {book.description || 'No description available.'}
+                  {book.description || t.noDescription}
                 </p>
               </div>
             )}
@@ -222,41 +225,40 @@ const BookPage: React.FC = () => {
               <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div className='space-y-4'>
                   <div>
-                    <p className='text-gray-500 text-sm'>ISBN</p>
+                    <p className='text-gray-500 text-sm'>{t.details.isbn}</p>
                     <p className='font-medium'>
                       {book.isbn || 'Not specified'}
                     </p>
                   </div>
                   <div>
-                    <p className='text-gray-500 text-sm'>Publication Year</p>
+                    <p className='text-gray-500 text-sm'>{t.details.publicationYear}</p>
                     <p className='font-medium'>
                       {book.publicationDate?.split('-')[0] || 'Not specified'}
                     </p>
                   </div>
                   <div>
-                    <p className='text-gray-500 text-sm'>Language</p>
+                    <p className='text-gray-500 text-sm'>{t.details.language}</p>
                     <p className='font-medium'>
                       {book.language || 'Not specified'}
                     </p>
                   </div>
                   <div>
-                    <p className='text-gray-500 text-sm'>Category</p>
+                    <p className='text-gray-500 text-sm'>{t.details.category}</p>
                     <p className='font-medium'>{book.category}</p>
                   </div>
                 </div>
                 <div className='space-y-4'>
                   <div>
-                    <p className='text-gray-500 text-sm'>Rating</p>
+                    <p className='text-gray-500 text-sm'>{t.details.rating}</p>
                     <div className='flex items-center'>
                       <div className='flex mr-2'>
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-5 h-5 ${
-                              i < Math.floor(book.rating)
+                            className={`w-5 h-5 ${i < Math.floor(book.rating)
                                 ? 'text-yellow-500'
                                 : 'text-gray-300'
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>
@@ -266,12 +268,12 @@ const BookPage: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <p className='text-gray-500 text-sm'>Stock Available</p>
+                    <p className='text-gray-500 text-sm'>{t.details.stock}</p>
                     <p className='font-medium'>{book.stock || 0} units</p>
                   </div>
                   {book.tags && book.tags.length > 0 && (
                     <div>
-                      <p className='text-gray-500 text-sm mb-2'>Genres</p>
+                      <p className='text-gray-500 text-sm mb-2'>{t.details.genres}</p>
                       <div className='flex flex-wrap gap-2'>
                         {book.tags.map((tag: string, index: number) => (
                           <span
@@ -291,10 +293,10 @@ const BookPage: React.FC = () => {
             {activeTab === 2 && (
               <div>
                 <h3 className='text-2xl font-semibold mb-4'>
-                  Customer Reviews
+                  {t.reviews.title}
                 </h3>
                 <p className='text-gray-600 dark:text-gray-400'>
-                  No reviews yet. Be the first to review this book!
+                  {t.reviews.empty}
                 </p>
               </div>
             )}

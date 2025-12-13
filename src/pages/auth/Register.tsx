@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useAppSelector } from '../../app/hooks';
 
 import {
   Person,
@@ -23,9 +24,16 @@ import {
   Button,
 } from '@mui/material';
 
+import { translations } from '../../features/language/translations';
+
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register, isLoading, error, clearError } = useAuth();
+  const currentLanguage = useAppSelector(
+    (state) => state.language.currentLanguage
+  );
+  // const { translationsAuth } = useAppSelector((state) => state.language); 
+  const t = translations[currentLanguage].auth.register;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -34,6 +42,7 @@ const Register: React.FC = () => {
     confirmPassword: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formError, setFormError] = useState('');
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -56,10 +65,10 @@ const Register: React.FC = () => {
   };
 
   const getStrengthColor = () => {
-    if (passwordStrength >= 75) return 'var(--success)';
-    if (passwordStrength >= 50) return 'var(--warning)';
-    if (passwordStrength >= 25) return 'var(--accent)';
-    return 'var(--danger)';
+    if (passwordStrength >= 75) return 'var(--success)'; // Strong
+    if (passwordStrength >= 50) return 'var(--warning)'; // Medium
+    if (passwordStrength >= 25) return 'var(--accent)'; // Weak
+    return 'var(--danger)'; // Very Weak
   };
 
   const validateForm = (): boolean => {
@@ -72,23 +81,28 @@ const Register: React.FC = () => {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setFormError('Please fill in all fields');
+      setFormError(t.errors.fillAllFields);
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setFormError('Please enter a valid email');
+      setFormError(t.errors.validEmail);
       return false;
     }
 
     if (formData.password.length < 6) {
-      setFormError('Password must be at least 6 characters');
+      setFormError(t.errors.passwordLength);
       return false;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setFormError('Passwords do not match');
+      setFormError(t.errors.passwordsMatch);
+      return false;
+    }
+
+    if (!agreedToTerms) {
+      setFormError(t.errors.agreeToTerms);
       return false;
     }
 
@@ -116,92 +130,90 @@ const Register: React.FC = () => {
           className='absolute left-6 top-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors'
         >
           <ArrowBack />
-          <span>Back</span>
+          <span>{t.back}</span>
         </button>
 
         {/* Header */}
         <div className='text-center'>
           <div className='mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 shadow-md'>
-            <HowToReg className='w-8 h-8 text-gray-700 dark:text-gray-300' />
+            <HowToReg className='w-8 h-8 text-gray-700 dark:text-gray-300' />{' '}
           </div>
 
-          <h2 className='text-3xl font-bold'>Create Account</h2>
-          <p className='mt-2 text-muted-foreground'>
-            Join our community of readers
-          </p>
+          <h2 className='text-3xl font-bold'>{t.title}</h2>
+          <p className='mt-2 text-muted-foreground'>{t.subtitle}</p>
         </div>
 
         {/* Form */}
         <form className='space-y-6' onSubmit={handleSubmit}>
           {/* Full Name */}
           <div>
-          <TextField
-            label='Full Name'
-            fullWidth
-            value={formData.name}
-            onChange={(e) => updateFormData('name', e.target.value)}
-            disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <Person sx={{ color: 'var(--muted-foreground)' }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                color: 'var(--foreground)',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'var(--border)',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'var(--primary)',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'var(--primary)',
-              },
-              '& .MuiInputLabel-root': {
-                color: 'var(--muted-foreground)',
-              },
-            }}
-          />
-</div>
+            <TextField
+              label={t.nameLabel}
+              fullWidth
+              value={formData.name}
+              onChange={(e) => updateFormData('name', e.target.value)}
+              disabled={isLoading}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Person sx={{ color: 'var(--muted-foreground)' }} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  color: 'var(--foreground)',
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'var(--border)',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'var(--primary)',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'var(--primary)',
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'var(--muted-foreground)',
+                },
+              }}
+            />
+          </div>
           {/* Email */}
           <div>
-          <TextField
-            label='Email Address'
-            className='mb-1'
-            fullWidth
-            value={formData.email}
-            onChange={(e) => updateFormData('email', e.target.value)}
-            disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <Email sx={{ color: 'var(--muted-foreground)' }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': { color: 'var(--foreground)' },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'var(--border)',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'var(--primary)',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'var(--primary)',
-              },
-              '& .MuiInputLabel-root': { color: 'var(--muted-foreground)' },
-            }}
-          />
-</div>
+            <TextField
+              label={t.emailLabel}
+              className='mb-1'
+              fullWidth
+              value={formData.email}
+              onChange={(e) => updateFormData('email', e.target.value)}
+              disabled={isLoading}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Email sx={{ color: 'var(--muted-foreground)' }} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': { color: 'var(--foreground)' },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'var(--border)',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'var(--primary)',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'var(--primary)',
+                },
+                '& .MuiInputLabel-root': { color: 'var(--muted-foreground)' },
+              }}
+            />
+          </div>
           {/* Password */}
           <FormControl fullWidth variant='outlined'>
             <InputLabel sx={{ color: 'var(--muted-foreground)' }}>
-              Password
+              {t.passwordLabel}
             </InputLabel>
 
             <OutlinedInput
@@ -227,7 +239,7 @@ const Register: React.FC = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label='Password'
+              label={t.passwordLabel}
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'var(--border)',
@@ -247,16 +259,16 @@ const Register: React.FC = () => {
           {formData.password && (
             <div className='space-y-3'>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Password strength</span>
+                <span className='text-muted-foreground'>{t.passwordStrength}</span>
                 <span
                   className='font-medium'
                   style={{ color: getStrengthColor() }}
                 >
                   {passwordStrength >= 75
-                    ? 'Strong'
+                    ? t.strength.strong
                     : passwordStrength >= 50
-                    ? 'Medium'
-                    : 'Weak'}
+                      ? t.strength.medium
+                      : t.strength.weak}
                 </span>
               </div>
 
@@ -278,7 +290,7 @@ const Register: React.FC = () => {
           {/* Confirm Password */}
           <FormControl fullWidth variant='outlined'>
             <InputLabel sx={{ color: 'var(--muted-foreground)' }}>
-              Confirm Password
+              {t.confirmPasswordLabel}
             </InputLabel>
 
             <OutlinedInput
@@ -308,7 +320,7 @@ const Register: React.FC = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label='Confirm Password'
+              label={t.confirmPasswordLabel}
               sx={{
                 color: 'var(--foreground)',
                 '& .MuiOutlinedInput-notchedOutline': {
@@ -329,15 +341,17 @@ const Register: React.FC = () => {
             <input
               type='checkbox'
               className='mt-1 h-4 w-4 text-primary border-border rounded'
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
             />
             <p className='text-sm text-muted-foreground'>
-              I agree to the{' '}
+              {t.agreeTo}{' '}
               <Link to='/terms' className='text-primary hover:underline'>
-                Terms
+                {t.termsLink}
               </Link>{' '}
-              and{' '}
+              {t.and}{' '}
               <Link to='/privacy' className='text-primary hover:underline'>
-                Privacy Policy
+                {t.privacyLink}
               </Link>
             </p>
           </div>
@@ -354,7 +368,7 @@ const Register: React.FC = () => {
           <Button
             type='submit'
             fullWidth
-            disabled={isLoading}
+            disabled={isLoading || !agreedToTerms}
             sx={{
               py: 1.6,
               fontSize: '1rem',
@@ -368,16 +382,16 @@ const Register: React.FC = () => {
               borderRadius: '0.75rem',
             }}
           >
-            {isLoading ? 'Creating account…' : 'Create Account'}
+            {isLoading ? t.registerButtonLoading : t.registerButton}
           </Button>
         </form>
 
         {/* Footer */}
         <div className='text-center'>
           <p className='text-muted-foreground'>
-            Already have an account?{' '}
+            {t.loginPrompt}{' '}
             <Link to='/login' className='text-primary hover:underline'>
-              Sign in
+              {t.loginLink}
             </Link>
           </p>
         </div>
