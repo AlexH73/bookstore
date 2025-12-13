@@ -1,11 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { bookApi } from '../api/bookApi';
 
 // Import existing reducers
 import languageReducer from '../features/language/languageSlice';
 import themeReducer from '../features/theme/themeSlice';
-import booksReducer from '../pages/BookCatalog/booksSlice';
+import authReducer from '../features/auth/authSlice';
 
 
 // ---------- Комбинируем все редьюсеры ----------
@@ -13,14 +14,15 @@ import booksReducer from '../pages/BookCatalog/booksSlice';
 const rootReducer = combineReducers({
   language: languageReducer,
   theme: themeReducer,
-  books: booksReducer,
+  auth: authReducer,
+  [bookApi.reducerPath]: bookApi.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['language', 'theme', 'user', "books"],
-  blacklist: [], // Исключаем то, что не нужно сохранять
+  whitelist: ['language', 'theme', 'user'],
+  blacklist: [bookApi.reducerPath], // Исключаем то, что не нужно сохранять
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -31,8 +33,8 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefault) =>
     getDefault({
-      serializableCheck: {},
-    }),
+      serializableCheck: false,
+    }).concat(bookApi.middleware),
 });
 
 export const persistor = persistStore(store);

@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
-// import Catalog from './pages/Catalog';
-// import Product from './pages/Product';
-// import Cart from './pages/Cart';
-// import Checkout from './pages/Checkout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { useThemeMode } from './features/theme/useThemeMode';
+import { CircularProgress } from '@mui/material';
+import Catalog from './pages/Catalog';
+import BookPage from './pages/BookPage';
+import BookForm from './components/book/BookForm';
+import EditBook from './pages/EditBook';
 
 const App: React.FC = () => {
   useThemeMode();
@@ -18,6 +19,62 @@ const App: React.FC = () => {
     <Routes>
       <Route path='/' element={<Layout />}>
         <Route index element={<Home />} />
+        <Route
+          path='/catalog'
+          element={
+            <Suspense
+              fallback={
+                <div className='flex justify-center py-12'>
+                  <CircularProgress />
+                </div>
+              }
+            >
+              <Catalog />
+            </Suspense>
+          }
+        />
+        <Route
+          path='/book/:id'
+          element={
+            <Suspense
+              fallback={
+                <div className='flex justify-center py-12'>
+                  <CircularProgress />
+                </div>
+              }
+            >
+              <BookPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path='/books/add'
+          element={
+            <Suspense
+              fallback={
+                <div className='flex justify-center py-12'>
+                  <CircularProgress />
+                </div>
+              }
+            >
+              <BookForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path='/books/edit/:id'
+          element={
+            <Suspense
+              fallback={
+                <div className='flex justify-center py-12'>
+                  <CircularProgress />
+                </div>
+              }
+            >
+              <EditBook />
+            </Suspense>
+          }
+        />
         {/* <Route path='catalog' element={<Catalog />} />
         <Route path='product/:id' element={<Product />} />
         <Route path='cart' element={<Cart />} />

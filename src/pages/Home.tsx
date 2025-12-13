@@ -11,10 +11,11 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { translationsHome } from '../features/language/translationsHome';
 import BookCard from '../components/ui/BookCard';
-import { BookDetails } from './BookCatalog/BookInfo';
-// import { BookCard } from './BookCatalog/BookCard';
-// import type { Book } from './BookCatalog/types/Book';
-import { BooksList } from './BookCatalog/BooksList';
+// import { BookDetails } from './BookCatalog/BookInfo';
+import { useGetBestsellersQuery } from '../api/bookApi';
+import { type Book } from '../types/book';
+import { CircularProgress, Alert } from '@mui/material';
+// import { BooksList } from './BookCatalog/BooksList';
 
 const Home: React.FC = () => {
   const currentLanguage = useAppSelector(
@@ -22,53 +23,55 @@ const Home: React.FC = () => {
   );
   const t = translationsHome[currentLanguage].home;
 
-  const featuredBooks = [
-    {
-      id: 1,
-      title: 'The Midnight Library',
-      author: 'Matt Haig',
-      price: 24.99,
-      rating: 4.5,
-      image:
-        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop',
-      category: 'Fiction',
-      bestseller: true,
-    },
-    {
-      id: 2,
-      title: 'Atomic Habits',
-      author: 'James Clear',
-      price: 19.99,
-      rating: 4.8,
-      image:
-        'https://images.unsplash.com/photo-1532012197267-da84d127e765?w-400&h=600&fit=crop',
-      category: 'Self-Help',
-      bestseller: true,
-    },
-    {
-      id: 3,
-      title: 'Project Hail Mary',
-      author: 'Andy Weir',
-      price: 27.99,
-      rating: 4.7,
-      image:
-        'https://images.unsplash.com/photo-1531346688376-ab6275c4725e?w=400&h=600&fit=crop',
-      category: 'Sci-Fi',
-      newRelease: true,
-    },
-    {
-      id: 4,
-      title: 'The Thursday Murder Club',
-      author: 'Richard Osman',
-      price: 22.99,
-      rating: 4.4,
-      image:
-        'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop',
-      category: 'Mystery',
-      sale: true,
-      salePrice: 18.99,
-    },
-  ];
+  const { data: bestsellers = [], isLoading, error } = useGetBestsellersQuery();
+
+  // const featuredBooks = [
+  //   {
+  //     id: 1,
+  //     title: 'The Midnight Library',
+  //     author: 'Matt Haig',
+  //     price: 24.99,
+  //     rating: 4.5,
+  //     image:
+  //       'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop',
+  //     category: 'Fiction',
+  //     bestseller: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Atomic Habits',
+  //     author: 'James Clear',
+  //     price: 19.99,
+  //     rating: 4.8,
+  //     image:
+  //       'https://images.unsplash.com/photo-1532012197267-da84d127e765?w-400&h=600&fit=crop',
+  //     category: 'Self-Help',
+  //     bestseller: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Project Hail Mary',
+  //     author: 'Andy Weir',
+  //     price: 27.99,
+  //     rating: 4.7,
+  //     image:
+  //       'https://images.unsplash.com/photo-1531346688376-ab6275c4725e?w=400&h=600&fit=crop',
+  //     category: 'Sci-Fi',
+  //     newRelease: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     title: 'The Thursday Murder Club',
+  //     author: 'Richard Osman',
+  //     price: 22.99,
+  //     rating: 4.4,
+  //     image:
+  //       'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop',
+  //     category: 'Mystery',
+  //     sale: true,
+  //     salePrice: 18.99,
+  //   },
+  // ];
 
   const categories = [
     {
@@ -186,7 +189,7 @@ const Home: React.FC = () => {
             <p className='text-gray-600'>{t.bestsellersSubtitle}</p>
           </div>
           <Link
-            to='/bestseller'
+            to='/catalog'
             className='flex items-center gap-1 text-primary hover:underline mt-2 sm:mt-0'
           >
             {t.viewAll}
@@ -194,85 +197,26 @@ const Home: React.FC = () => {
           </Link>
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
-          {featuredBooks.map((book) => (
-            <div
-              key={book.id}
-              className='card-hoverbg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden group'
-            >
-              <div className='relative overflow-hidden'>
-                <img
-                  src={book.image}
-                  alt={book.title}
-                  className='w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300'
-                />
-                <button className='absolute top-3 right-3 bg-white/90 hover:bg-white p-2 rounded-full shadow-sm'>
-                  <FavoriteBorder className='w-5 h-5 dark:text-black/90 dark:hover:text-gray-400' />
-                </button>
-                {book.bestseller && (
-                  <span className='absolute top-3 left-3 bg-secondary text-white px-2 py-1 rounded text-xs font-semibold'>
-                    {t.bestseller}
-                  </span>
-                )}
-                {book.sale && (
-                  <span className='absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold dark:bg-red-600'>
-                    {t.sale}
-                  </span>
-                )}
-              </div>
-
-              <div className='p-4'>
-                <h3 className='font-semibold text-lg mb-1 line-clamp-1'>
-                  {book.title}
-                </h3>
-                <p className='text-gray-600 text-sm mb-3'>{book.author}</p>
-
-                <div className='flex items-center justify-between mb-4'>
-                  <div className='flex items-center gap-1'>
-                    <Star className='w-4 h-4 text-yellow-500' />
-                    <span className='text-sm'>{book.rating}</span>
-                  </div>
-                  <div className='text-right'>
-                    {book.sale ? (
-                      <>
-                        <span className='text-gray-400 line-through text-sm'>
-                          €{book.price}
-                        </span>
-                        <p className='text-secondary font-bold text-lg'>
-                          €{book.salePrice}
-                        </p>
-                      </>
-                    ) : (
-                      <p className='font-bold text-lg text-gray-600'>
-                        €{book.price}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <button className='btn-primary w-full flex items-center justify-center gap-2'>
-                  <AddShoppingCart className='w-5 h-5' />
-                  {t.addToCart}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <BookCard book={{
-          id: '',
-          title: '',
-          author: '',
-          price: 0,
-          rating: 0,
-          image: '',
-          category: '',
-          bestseller: undefined,
-          sale: undefined,
-          salePrice: undefined
-        }} />
-<BooksList />
-        <BookDetails />
+        {isLoading ? (
+          <div className='flex justify-center py-12'>
+            <CircularProgress />
+          </div>
+        ) : error ? (
+          <Alert severity='error' className='mb-6'>
+            Ошибка загрузки книг
+          </Alert>
+        ) : (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+            {bestsellers.map((book: Book) => (
+              <BookCard
+                key={book.id}
+                book={book}
+                onAddToCart={() => console.log('Add to cart:', book)}
+                onToggleFavorite={() => console.log('Toggle favorite:', book)}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Newsletter Section */}
@@ -292,9 +236,7 @@ const Home: React.FC = () => {
                   {t.subscribe}
                 </button>
               </div>
-              <p className='mt-4 text-sm text-gray-500'>
-                {t.privacyPolicy}
-              </p>
+              <p className='mt-4 text-sm text-gray-500'>{t.privacyPolicy}</p>
             </div>
             <div className='hidden md:block'>
               <img
