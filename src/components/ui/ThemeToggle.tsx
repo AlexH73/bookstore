@@ -19,14 +19,17 @@ const ThemeToggle: React.FC = () => {
         }
       }}
     >
-      <ToggleButton value='light'>
-        <LightMode fontSize='small' />
+      <ToggleButton value='light' className='dark:bg-gray-400!'>
+        <LightMode fontSize='small' className='text-orange-400' />
       </ToggleButton>
-      <ToggleButton value='system'>
-        <BrightnessAuto fontSize='small' />
+      <ToggleButton value='system' className='dark:bg-gray-400!'>
+        <BrightnessAuto fontSize='small' className='text-gray-500' />
       </ToggleButton>
-      <ToggleButton value='dark'>
-        <DarkMode fontSize='small' />
+      <ToggleButton value='dark' className='dark:bg-gray-400!'>
+        <DarkMode
+          fontSize='small'
+          className='text-amber-300'
+        />
       </ToggleButton>
     </ToggleButtonGroup>
   );
