@@ -1,4 +1,3 @@
-// src/pages/Catalog.tsx
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -10,6 +9,7 @@ import {
   ExpandLess,
   Star,
   FavoriteBorder,
+  Favorite,
   AddShoppingCart,
   Inventory,
 } from '@mui/icons-material';
@@ -31,6 +31,8 @@ import BookCard from '../components/ui/BookCard';
 import { type Book } from '../types/book';
 import { useAppSelector } from '../app/hooks';
 import { translations } from '../features/language/translations';
+import { useWishlist } from '../contexts/WishlistContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Catalog: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -44,12 +46,15 @@ const Catalog: React.FC = () => {
   );
   const t = translations[currentLanguage].catalog;
 
+  const { user } = useAuth();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const searchParam = queryParams.get('search') || '';
   const categoryParam = queryParams.get('category') || '';
+  const wishlistParam = queryParams.get('wishlist') === 'true'; 
 
   const [localSearchTerm, setLocalSearchTerm] = useState(searchParam);
+  const { wishlist, toggleWishlist, isInWishlist } = useWishlist();
 
   // Fetch data with RTK Query
   const {
@@ -59,8 +64,6 @@ const Catalog: React.FC = () => {
   } = useGetBooksQuery();
   const { data: localBooks = [], isLoading: isLoadingLocal } =
     useGetLocalBooksQuery();
-
-  const user = useAppSelector((state) => state.auth.user);
 
   // Combine all books
   const allBooks: Book[] = [...apiBooks, ...localBooks];
@@ -82,7 +85,11 @@ const Catalog: React.FC = () => {
     const matchesPrice =
       book.price >= priceRange[0] && book.price <= priceRange[1];
 
-    return matchesSearch && matchesCategory && matchesPrice;
+    const matchesWishlist = wishlistParam
+      ? wishlist.some((w) => w.id === book.id)
+      : true;
+
+    return matchesSearch && matchesCategory && matchesPrice && matchesWishlist;
   });
 
   // Sort books
@@ -115,9 +122,13 @@ const Catalog: React.FC = () => {
     // TODO: Implement add to cart logic
   };
 
-  const handleToggleFavorite = (book: Book) => {
-    console.log('Toggle favorite:', book);
-    // TODO: Implement favorite logic
+  // Функция для обработки добавления в wishlist с проверкой аутентификации
+  const handleWishlistToggle = (book: Book) => {
+    if (!user?.isAuthenticated) {
+      alert('Please login to add to wishlist');
+      return;
+    }
+    toggleWishlist(book);
   };
 
   if (isLoadingApi || isLoadingLocal) {
@@ -142,12 +153,16 @@ const Catalog: React.FC = () => {
   const maxPrice = Math.ceil(Math.max(...allBooks.map((b) => b.price), 100));
 
   return (
-    <div className='container-custom py-8 px-4 md:px-6 lg:px-8 bg-background/95 text-gray-foreground'>
+    <div className='container-custom py-8 px-4 md:px-6 lg:px-8'>
       {/* Header */}
       <div className='mb-8'>
-        <h1 className='text-4xl font-bold mb-2'>{t.title}</h1>
-        <p className='text-foreground'>
-          {t.totalBooks}: {allBooks.length}
+        <h1 className='text-4xl font-bold mb-2 dark:text-gray-200'>
+          {wishlistParam ? 'My Wishlist' : t.title}
+        </h1>
+        <p className='text-gray-600 dark:text-gray-400'>
+          {wishlistParam
+            ? `${wishlist.length} books in wishlist`
+            : `${t.totalBooks}: ${allBooks.length}`}
         </p>
       </div>
 
@@ -158,7 +173,7 @@ const Catalog: React.FC = () => {
           <div className='flex items-center gap-4'>
             <div className='flex items-center gap-2'>
               <FilterList className='text-primary' />
-              <h3 className='font-semibold text-lg'>{t.filters.title}</h3>
+              <h3 className='font-semibold text-lg dark:text-gray-200'>{t.filters.title}</h3>
             </div>
 
             <Button
@@ -166,7 +181,7 @@ const Catalog: React.FC = () => {
               size='small'
               onClick={() => setShowFilters(!showFilters)}
               endIcon={showFilters ? <ExpandLess /> : <ExpandMore />}
-              className='border-primary text-primary hover:bg-primary/10'
+              className='border-primary text-primary hover:bg-primary/10 dark:text-primary dark:border-primary'
             >
               {showFilters
                 ? t.filters.hide || 'Hide Filters'
@@ -179,6 +194,7 @@ const Catalog: React.FC = () => {
                 onDelete={() => setLocalSearchTerm('')}
                 color='primary'
                 variant='outlined'
+                className='dark:border-primary dark:text-primary'
               />
             )}
           </div>
@@ -187,12 +203,12 @@ const Catalog: React.FC = () => {
           <div className='flex flex-col sm:flex-row gap-4'>
             <div className='flex items-center gap-2'>
               <FormControl size='small' className='min-w-[150px]'>
-                <InputLabel>{t.sortBy}</InputLabel>
+                <InputLabel className='dark:text-gray-400'>{t.sortBy}</InputLabel>
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
                   label={t.sortBy}
-                  className='dark:bg-gray-800 dark:text-gray-200'
+                  className='dark:bg-gray-700 dark:text-gray-200'
                 >
                   <MenuItem value='title'>{t.sortOptions.title}</MenuItem>
                   <MenuItem value='price'>{t.sortOptions.price}</MenuItem>
@@ -202,10 +218,10 @@ const Catalog: React.FC = () => {
 
               <div className='flex border border-gray-300 rounded-lg overflow-hidden dark:border-gray-700'>
                 <button
-                  className={`p-2 ${
+                  className={`p-2 transition-colors ${
                     viewMode === 'grid'
                       ? 'bg-primary text-white'
-                      : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300'
                   }`}
                   onClick={() => setViewMode('grid')}
                   title={t.viewGrid || 'Grid View'}
@@ -213,10 +229,10 @@ const Catalog: React.FC = () => {
                   <GridView />
                 </button>
                 <button
-                  className={`p-2 ${
+                  className={`p-2 transition-colors ${
                     viewMode === 'list'
                       ? 'bg-primary text-white'
-                      : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300'
                   }`}
                   onClick={() => setViewMode('list')}
                   title={t.viewList || 'List View'}
@@ -230,10 +246,25 @@ const Catalog: React.FC = () => {
               variant='outlined'
               startIcon={<ClearAll />}
               onClick={resetFilters}
-              className='border-gray-300 hover:border-red-500 hover:text-red-600 dark:border-gray-700'
+              className='border-gray-300 hover:border-red-500 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-500 dark:hover:text-red-400'
             >
               {t.resetFilters}
             </Button>
+
+            {wishlistParam && wishlist.length > 0 && (
+              <Button
+                variant='outlined'
+                color='error'
+                onClick={() => {
+                  // Можно добавить функцию очистки wishlist
+                  if (window.confirm('Clear all items from wishlist?')) {
+                    // clearWishlist();
+                  }
+                }}
+              >
+                Clear Wishlist
+              </Button>
+            )}
           </div>
         </div>
 
@@ -243,7 +274,7 @@ const Catalog: React.FC = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
               {/* Categories */}
               <div>
-                <h4 className='font-medium mb-3'>{t.filters.categories}</h4>
+                <h4 className='font-medium mb-3 dark:text-gray-300'>{t.filters.categories}</h4>
                 <div className='flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1'>
                   {categories.map((category) => (
                     <button
@@ -263,7 +294,7 @@ const Catalog: React.FC = () => {
 
               {/* Price Range */}
               <div>
-                <h4 className='font-medium mb-3'>{t.filters.priceRange}</h4>
+                <h4 className='font-medium mb-3 dark:text-gray-300'>{t.filters.priceRange}</h4>
                 <div className='px-2'>
                   <Slider
                     value={priceRange}
@@ -277,7 +308,7 @@ const Catalog: React.FC = () => {
                     step={5}
                     className='text-primary'
                   />
-                  <div className='flex justify-between text-sm text-gray-500 mt-2'>
+                  <div className='flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2'>
                     <span>€{priceRange[0]}</span>
                     <span>€{priceRange[1]}</span>
                   </div>
@@ -286,25 +317,25 @@ const Catalog: React.FC = () => {
 
               {/* Stats */}
               <div>
-                <h4 className='font-medium mb-3'>Statistics</h4>
+                <h4 className='font-medium mb-3 dark:text-gray-300'>Statistics</h4>
                 <div className='grid grid-cols-2 gap-3'>
                   <div className='bg-gray-50 dark:bg-gray-900 p-3 rounded-lg'>
-                    <p className='text-sm text-gray-500'>Showing</p>
-                    <p className='text-2xl font-bold'>{sortedBooks.length}</p>
-                    <p className='text-xs text-gray-500'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>Showing</p>
+                    <p className='text-2xl font-bold dark:text-gray-200'>{sortedBooks.length}</p>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                       of {allBooks.length} books
                     </p>
                   </div>
                   <div className='bg-gray-50 dark:bg-gray-900 p-3 rounded-lg'>
-                    <p className='text-sm text-gray-500'>Average Price</p>
-                    <p className='text-2xl font-bold'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>Average Price</p>
+                    <p className='text-2xl font-bold dark:text-gray-200'>
                       €
                       {(
                         allBooks.reduce((sum, book) => sum + book.price, 0) /
                         Math.max(allBooks.length, 1)
                       ).toFixed(2)}
                     </p>
-                    <p className='text-xs text-gray-500'>per book</p>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>per book</p>
                   </div>
                 </div>
               </div>
@@ -324,10 +355,10 @@ const Catalog: React.FC = () => {
             className='bg-primary text-white text-lg py-2 px-4'
           />
 
-          {user && (
+          {user && user.isAuthenticated && (
             <Link
               to='/books/add'
-              className='bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 shadow-md hover:shadow-lg'
+              className='bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 shadow-md hover:shadow-lg dark:hover:bg-purple-700'
             >
               <span className='font-medium'>{t.addNewBook}</span>
             </Link>
@@ -336,11 +367,11 @@ const Catalog: React.FC = () => {
 
         {sortedBooks.length === 0 ? (
           <div className='text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl'>
-            <p className='text-gray-500 text-lg mb-4'>{t.noBooksFound}</p>
+            <p className='text-gray-500 dark:text-gray-400 text-lg mb-4'>{t.noBooksFound}</p>
             <Button
               variant='contained'
               onClick={resetFilters}
-              className='bg-primary'
+              className='bg-primary hover:bg-primary-dark'
             >
               Clear All Filters
             </Button>
@@ -353,7 +384,7 @@ const Catalog: React.FC = () => {
                 key={book.id}
                 book={book}
                 onAddToCart={() => handleAddToCart(book)}
-                onToggleFavorite={() => handleToggleFavorite(book)}
+                onToggleFavorite={() => handleWishlistToggle(book)}
               />
             ))}
           </div>
@@ -393,10 +424,14 @@ const Catalog: React.FC = () => {
                       </div>
                       <IconButton
                         size='small'
-                        onClick={() => handleToggleFavorite(book)}
-                        className='text-gray-400 hover:text-red-500'
+                        onClick={() => handleWishlistToggle(book)}
+                        className='text-gray-400 hover:text-red-500 dark:hover:text-red-400'
                       >
-                        <FavoriteBorder />
+                        {isInWishlist(book.id.toString()) ? (
+                          <Favorite className="text-red-500" />
+                        ) : (
+                          <FavoriteBorder />
+                        )}
                       </IconButton>
                     </div>
 
@@ -419,7 +454,7 @@ const Catalog: React.FC = () => {
                     </div>
 
                     <div className='mb-2'>
-                      <span className='inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded'>
+                      <span className='inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded dark:text-gray-300'>
                         {book.category}
                       </span>
                       {book.bestseller && (
@@ -440,10 +475,10 @@ const Catalog: React.FC = () => {
                     <div className='flex items-center gap-3'>
                       {book.sale && book.salePrice ? (
                         <div className='flex items-center gap-2'>
-                          <span className='text-2xl font-bold text-red-600'>
+                          <span className='text-2xl font-bold text-red-600 dark:text-red-400'>
                             €{book.salePrice.toFixed(2)}
                           </span>
-                          <span className='text-gray-400 line-through'>
+                          <span className='text-gray-400 line-through dark:text-gray-500'>
                             €{book.price.toFixed(2)}
                           </span>
                         </div>
@@ -459,7 +494,7 @@ const Catalog: React.FC = () => {
                           <span>{book.stock} in stock</span>
                         </div>
                       ) : (
-                        <span className='text-sm text-red-600'>
+                        <span className='text-sm text-red-600 dark:text-red-400'>
                           Out of stock
                         </span>
                       )}
@@ -468,7 +503,7 @@ const Catalog: React.FC = () => {
                     <button
                       onClick={() => handleAddToCart(book)}
                       disabled={!book.stock || book.stock <= 0}
-                      className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
+                      className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 dark:hover:bg-purple-700'
                     >
                       <AddShoppingCart className='w-5 h-5' />
                       Add to Cart

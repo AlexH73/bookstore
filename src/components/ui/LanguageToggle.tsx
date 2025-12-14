@@ -11,6 +11,12 @@ const LanguageToggle: React.FC<LanguageToggleProps> = ({
   currentLanguage,
   handleLanguageChange,
 }) => {
+  const languages = [
+    { code: 'en', label: 'EN', flag: '🇬🇧' },
+    { code: 'de', label: 'DE', flag: '🇩🇪' },
+    { code: 'ru', label: 'RU', flag: '🇷🇺' },
+  ];
+
   return (
     <ToggleButtonGroup
       color='primary'
@@ -20,16 +26,34 @@ const LanguageToggle: React.FC<LanguageToggleProps> = ({
         if (newLang !== null) handleLanguageChange(newLang as Language);
       }}
       aria-label='Language switcher'
+      size='small'
+      className='bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm'
     >
-      <ToggleButton className='py-1! px-2! text-s!' value='en'>
-        EN
-      </ToggleButton>
-      <ToggleButton className='py-1! px-2! text-s!' value='de'>
-        DE
-      </ToggleButton>
-      <ToggleButton className='py-1! px-2! text-s!' value='ru'>
-        RU
-      </ToggleButton>
+      {languages.map((lang) => (
+        <ToggleButton
+          key={lang.code}
+          value={lang.code}
+          className='py-1 px-3 min-w-0 transition-all duration-200 group'
+          sx={{
+            '&.Mui-selected': {
+              backgroundColor: '#7f6edc',
+              color: 'white',
+              '&:hover': { backgroundColor: '#6d5cd6' }
+            },
+            '&:hover': { 
+              backgroundColor: 'rgba(127, 110, 220, 0.1)',
+              transform: 'translateY(-1px)'
+            }
+          }}
+        >
+          <div className='flex items-center gap-1.5'>
+            <span className='text-sm'>{lang.flag}</span>
+            <span className='text-xs font-medium group-hover:scale-105 transition-transform'>
+              {lang.label}
+            </span>
+          </div>
+        </ToggleButton>
+      ))}
     </ToggleButtonGroup>
   );
 };
