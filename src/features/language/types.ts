@@ -206,24 +206,29 @@ export interface HomeTranslations {
 }
 
 export interface CatalogTranslations {
+  title: string;
+  totalBooks: string;
+  searchPlaceholder: string;
+  sortBy: string;
+  sortOptions: {
     title: string;
-    totalBooks: string;
-    searchPlaceholder: string;
-    sortBy: string;
-    sortOptions: {
-        title: string;
-        price: string;
-        rating: string;
-    };
-    filters: {
-        title: string;
-        categories: string;
-        priceRange: string;
-    };
-    addNewBook: string;
-    foundBooks: string;
-    noBooksFound: string;
-    error: string;
+    price: string;
+    rating: string;
+  };
+  filters: {
+    title: string;
+    show: string;
+    hide: string;
+    categories: string;
+    priceRange: string;
+  };
+  viewGrid: string;
+  viewList: string;
+  resetFilters: string;
+  addNewBook: string;
+  foundBooks: string;
+  noBooksFound: string;
+  error: string;
 }
 
 export interface BookPageTranslations {

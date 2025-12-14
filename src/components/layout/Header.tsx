@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Menu as MenuIcon,
   Login as LoginIcon,
@@ -11,10 +11,13 @@ import {
   LocalShipping,
   ArrowDropDown,
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { translations } from '../../features/language/translations';
-import { setLanguage, type Language } from '../../features/language/languageSlice';
+import {
+  setLanguage,
+  type Language,
+} from '../../features/language/languageSlice';
 import ThemeToggle from '../ui/ThemeToggle';
 import Logo from '../ui/Logo';
 import LanguageToggle from '../ui/LanguageToggle';
@@ -25,6 +28,7 @@ const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [, setUserMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const { user, logout } = useAuth();
 
   const dispatch = useAppDispatch();
@@ -32,6 +36,19 @@ const Header: React.FC = () => {
     (state) => state.language.currentLanguage
   );
   const t = translations[currentLanguage].header;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Синхронизируем поисковую строку с URL при навигации
+  useEffect(() => {
+    if (location.pathname === '/catalog') {
+      const params = new URLSearchParams(location.search);
+      const searchParam = params.get('search') || '';
+      setSearchTerm(searchParam);
+    } else {
+      setSearchTerm('');
+    }
+  }, [location]);
 
   const handleLanguageChange = (lang: Language) => {
     dispatch(setLanguage(lang));
@@ -49,6 +66,30 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
+  };
+
+  // Обработчик изменения поискового запроса
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    localStorage.setItem('bookstore_search', term);
+  };
+
+  // Обработчик отправки поискового запроса
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/catalog?search=${encodeURIComponent(searchTerm)}`);
+      setSearchOpen(false);
+    }
+  };
+
+  // Обработчик клика по иконке поиска (мобильная версия)
+  const handleSearchIconClick = () => {
+    setSearchOpen(!searchOpen);
+    if (!searchOpen && searchTerm.trim()) {
+      navigate(`/catalog?search=${encodeURIComponent(searchTerm)}`);
+    }
   };
 
   return (
@@ -103,7 +144,7 @@ const Header: React.FC = () => {
                     <Link
                       key={item.label}
                       to={item.path}
-                      className='font-medium text-gray-700 dark:text-gray-300 hover:text-white transition-colors bg-medium p'
+                      className='font-medium text-gray-700 dark:text-gray-300 hover:text-medium transition-all'
                     >
                       {item.label}
                     </Link>
@@ -118,22 +159,27 @@ const Header: React.FC = () => {
               <div className='flex items-center gap-2 md:gap-4 mr-5'>
                 {/* Desktop Search */}
                 <div className='hidden lg:flex relative'>
-                  <div className='relative rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-500 dark:hover:bg-gray-600 transition-colors w-64 lg:w-80'>
+                  <form
+                    onSubmit={handleSearchSubmit}
+                    className='relative rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-500 dark:hover:bg-gray-600 transition-colors w-64 lg:w-80'
+                  >
                     <div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
                       <Search className='w-5 h-5 dark:text-gray-400' />
                     </div>
                     <input
                       type='text'
                       placeholder={t.searchPlaceholder}
+                      value={searchTerm}
+                      onChange={handleSearchChange}
                       className='w-full pl-10 pr-4 py-2 bg-transparent outline-none'
                     />
-                  </div>
+                  </form>
                 </div>
 
                 {/* Mobile Search Button */}
                 <button
                   className='lg:hidden p-2 hover:bg-gray-100 rounded-lg'
-                  onClick={() => setSearchOpen(!searchOpen)}
+                  onClick={handleSearchIconClick}
                 >
                   <Search />
                 </button>
@@ -141,13 +187,6 @@ const Header: React.FC = () => {
                 <button className='p-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 rounded-lg'>
                   <FavoriteBorder />
                 </button>
-
-                {/* <Link
-                  to='/account'
-                  className='p-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 rounded-lg'
-                >
-                  <Person />
-                </Link> */}
 
                 <Link
                   to='/cart'
@@ -164,17 +203,22 @@ const Header: React.FC = () => {
             {/* Mobile Search Bar */}
             {searchOpen && (
               <div className='w-full md:hidden mt-2'>
-                <div className='relative rounded-lg bg-gray-100 w-full'>
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className='relative rounded-lg bg-gray-100 w-full'
+                >
                   <div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
                     <Search className='w-5 h-5' />
                   </div>
                   <input
                     type='text'
                     placeholder={t.searchPlaceholder}
+                    value={searchTerm}
+                    onChange={handleSearchChange}
                     className='w-full pl-10 pr-4 py-2 bg-transparent outline-none'
                     autoFocus
                   />
-                </div>
+                </form>
               </div>
             )}
 
@@ -193,10 +237,6 @@ const Header: React.FC = () => {
               </nav>
 
               <div className='flex items-center gap-4 mr-10'>
-                {/* <span className='text-gray-600'>{t.newReleases}</span>
-                <button className='btn-secondary px-4 py-2'>
-                  {t.subscribe}
-                </button> */}
                 {user?.isAuthenticated ? (
                   <>
                     <Tooltip title='My Account' arrow>

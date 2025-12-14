@@ -7,6 +7,7 @@ import './index.css';
 import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
+import { SearchProvider } from './contexts/SearchContext';
 import { store } from './app/store';
 import App from './App';
 import theme from './features/theme/theme';
@@ -23,17 +24,19 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-       <Provider store={store}> 
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <AuthProvider> 
+    <SearchProvider>
+      <BrowserRouter>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <AuthProvider>
                 <App />
-            </AuthProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </Provider>
-    </BrowserRouter>
+              </AuthProvider>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </Provider>
+      </BrowserRouter>
+    </SearchProvider>
   </React.StrictMode>
 );
