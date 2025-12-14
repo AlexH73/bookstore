@@ -11,7 +11,6 @@ import {
   Star,
   FavoriteBorder,
   AddShoppingCart,
-  LocalShipping,
   Inventory,
 } from '@mui/icons-material';
 import {
