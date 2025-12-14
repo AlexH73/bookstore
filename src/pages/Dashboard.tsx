@@ -86,7 +86,10 @@ const Dashboard: React.FC = () => {
 
             <div>
               <h1 className='text-3xl font-bold'>
-                {t.welcomeMessage.replace('{name}', user?.name || user?.email?.split('@')[0] || '')}
+                {t.welcomeMessage.replace(
+                  '{name}',
+                  user?.name || user?.email?.split('@')[0] || ''
+                )}
               </h1>
               <p className='opacity-80 mt-1'>
                 {t.memberSince}{' '}
@@ -144,9 +147,12 @@ const Dashboard: React.FC = () => {
                         className='w-12 h-16 object-cover rounded-md'
                       />
                       <div>
-                        <h3 className='font-semibold'>{t.recentOrdersData.bookTitle} {order}</h3>
+                        <h3 className='font-semibold'>
+                          {t.recentOrdersData.bookTitle} {order}
+                        </h3>
                         <p className='text-sm text-muted-foreground'>
-                          {t.recentOrdersData.orderNumber} #ORD-2024-{1000 + order}
+                          {t.recentOrdersData.orderNumber} #ORD-2024-
+                          {1000 + order}
                         </p>
                       </div>
                     </div>
@@ -197,18 +203,29 @@ const Dashboard: React.FC = () => {
 
             <div className='space-y-4'>
               <div className='flex justify-between'>
-                <span className='text-muted-foreground'>{t.accountInfo.email}</span>
+                <span className='text-muted-foreground'>
+                  {t.accountInfo.email}
+                </span>
                 <span className='font-medium'>{user?.email}</span>
               </div>
 
               <div className='flex justify-between'>
-                <span className='text-muted-foreground'>{t.accountInfo.accountType}</span>
+                <span className='text-muted-foreground'>
+                  {t.accountInfo.accountType}
+                </span>
                 <span className='badge-primary'>Premium Reader</span>
               </div>
 
               <div className='flex justify-between'>
-                <span className='text-muted-foreground'>{t.accountInfo.readingLevel}</span>
+                <span className='text-muted-foreground'>
+                  {t.accountInfo.readingLevel}
+                </span>
                 <span className='font-medium'>Advanced</span>
+              </div>
+
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Role</span>
+                <span className='font-medium'>{user?.role}</span>
               </div>
             </div>
           </div>
@@ -248,24 +265,32 @@ const Dashboard: React.FC = () => {
               <button className='w-full text-left p-4 border border-border rounded-xl hover:bg-muted transition-colors'>
                 <div className='flex justify-between'>
                   <div>
-                    <div className='font-medium'>{t.shipping.defaultAddress}</div>
+                    <div className='font-medium'>
+                      {t.shipping.defaultAddress}
+                    </div>
                     <div className='text-sm text-muted-foreground'>
                       {t.shipping.defaultAddressValue}
                     </div>
                   </div>
-                  <span className='text-primary text-sm'>{t.shipping.edit}</span>
+                  <span className='text-primary text-sm'>
+                    {t.shipping.edit}
+                  </span>
                 </div>
               </button>
 
               <button className='w-full text-left p-4 border border-border rounded-xl hover:bg-muted transition-colors'>
                 <div className='flex justify-between'>
                   <div>
-                    <div className='font-medium'>{t.shipping.paymentMethods}</div>
+                    <div className='font-medium'>
+                      {t.shipping.paymentMethods}
+                    </div>
                     <div className='text-sm text-muted-foreground'>
                       {t.shipping.paymentMethodsValue}
                     </div>
                   </div>
-                  <span className='text-primary text-sm'>{t.shipping.manage}</span>
+                  <span className='text-primary text-sm'>
+                    {t.shipping.manage}
+                  </span>
                 </div>
               </button>
             </div>

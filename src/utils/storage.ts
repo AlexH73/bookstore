@@ -3,7 +3,7 @@ export interface User {
   email: string;
   name?: string;
   avatar?: string;
-  role?: 'user' | 'admin';
+  role: 'user' | 'admin';
   createdAt: string;
 }
 
@@ -11,15 +11,16 @@ export interface AuthUser {
   email: string;
   name?: string;
   token?: string;
-  role?: 'user' | 'admin';
+  role: 'user' | 'admin';
   isAuthenticated: boolean;
 }
 
 // Сохранение текущего пользователя
-export const saveAuthUser = (user: User) => {
+export const saveAuthUser = (user: AuthUser | { email: string; name?: string; role?: 'user' | 'admin' }) => {
   const authData = {
     email: user.email,
     name: user.name,
+    role: user.role,
     isAuthenticated: true,
     lastLogin: new Date().toISOString(),
   };
@@ -32,7 +33,13 @@ export const getAuthUser = (): AuthUser | null => {
   if (!data) return null;
 
   try {
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    return {
+      email: parsed.email,
+      name: parsed.name,
+      role: parsed.role || 'user', // Default to 'user' if not specified
+      isAuthenticated: parsed.isAuthenticated || false,
+    };
   } catch {
     return null;
   }
@@ -79,5 +86,4 @@ export const isAuthenticated = (): boolean => {
 export const clearAllAuthData = () => {
   localStorage.removeItem('auth_user');
   localStorage.removeItem('auth_token');
-  // Не удаляем users, чтобы сохранить регистрации
 };

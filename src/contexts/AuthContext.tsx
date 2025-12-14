@@ -27,6 +27,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: string | null;
   clearError: () => void;
+  updateUserRole: (role: 'user' | 'admin') => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -54,7 +55,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const savedUser = getAuthUser();
         if (savedUser?.isAuthenticated) {
-          setUser(savedUser);
+          // Определяем роль пользователя при загрузке
+          const userWithRole = {
+            ...savedUser,
+            role: determineUserRole(savedUser.email)
+          };
+          setUser(userWithRole);
         }
       } catch (err) {
         console.error('Failed to load user:', err);
@@ -66,6 +72,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loadUser();
   }, []);
 
+  // Функция для определения роли пользователя
+  const determineUserRole = (email?: string): 'user' | 'admin' => {
+    if (!email) return 'user';
+    
+    // Администраторы по email
+    const adminEmails = ['admin@bookstore.com', 'demo@bookstore.com'];
+    return adminEmails.includes(email) ? 'admin' : 'user';
+  };
+
   // Создание нового пользователя
   const createNewUser = (
     email: string,
@@ -76,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       id: `user_${Date.now()}`,
       email,
       name: name || email.split('@')[0],
-      role: 'user',
+      role: determineUserRole(email), // Используем функцию определения роли
       createdAt: new Date().toISOString(),
     };
   };
@@ -115,19 +130,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      // Создание нового пользователя
+      // Создание нового пользователя с определением роли
       const newUser = createNewUser(email, password, name);
 
       // Сохранение в localStorage
       users[email] = { password, user: newUser };
       saveUsers(users);
-      saveAuthUser(newUser);
-
-      setUser({
+      
+      // Сохраняем в auth_user с правильными данными
+      const authUserData = {
         email: newUser.email,
         name: newUser.name,
         isAuthenticated: true,
-      });
+        role: newUser.role
+      };
+      saveAuthUser(authUserData);
+
+      setUser(authUserData);
 
       return true;
     } catch (err) {
@@ -161,14 +180,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      // Успешный вход
-      saveAuthUser(userData.user);
-
-      setUser({
+      // Определяем роль пользователя
+      const userRole = determineUserRole(email);
+      
+      // Создаем объект для сохранения
+      const authUserData = {
         email: userData.user.email,
         name: userData.user.name,
         isAuthenticated: true,
-      });
+        role: userRole
+      };
+
+      // Успешный вход
+      saveAuthUser(authUserData);
+
+      setUser(authUserData);
 
       return true;
     } catch (err) {
@@ -187,6 +213,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
   };
 
+  // Обновление роли пользователя
+  const updateUserRole = (role: 'user' | 'admin') => {
+    if (user) {
+      const updatedUser = { ...user, role };
+      setUser(updatedUser);
+      saveAuthUser(updatedUser);
+    }
+  };
+
   // Очистка ошибок
   const clearError = () => setError(null);
 
@@ -200,6 +235,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isLoading,
         error,
         clearError,
+        updateUserRole,
       }}
     >
       {children}
