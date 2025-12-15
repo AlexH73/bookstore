@@ -355,7 +355,7 @@ const Catalog: React.FC = () => {
             className='bg-primary text-white text-lg py-2 px-4'
           />
 
-          {user && user.isAuthenticated && (
+          {user?.isAuthenticated && user.role === 'admin' && (
             <Link
               to='/books/add'
               className='bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 shadow-md hover:shadow-lg dark:hover:bg-purple-700'
