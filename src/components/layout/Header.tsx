@@ -99,10 +99,10 @@ const Header: React.FC = () => {
       <div className='bg-linear-to-r from-gray-800 to-gray-900 text-white py-2 px-10'>
         <div className='container-custom flex justify-between items-center'>
           <div className='flex items-center gap-2 text-sm'>
-            <LocalShipping className='w-4 h-4 text-blue-300' />
-            <span className='text-gray-300'>{t.promo}</span>
+            <LocalShipping className='w-4 h-4 text-blue-300/50' />
+            <span className='text-gray-300/50'>{t.promo}</span>
           </div>
-          <div className='hidden md:flex items-center gap-4 text-sm text-gray-300'>
+          <div className='hidden md:flex items-center gap-4 text-sm text-gray-300/50'>
             <span>{t.storeLocator}</span>
             <span>{t.helpContact}</span>
           </div>
@@ -209,7 +209,7 @@ const Header: React.FC = () => {
                       <FavoriteBorder className='w-6 h-6 dark:text-gray-300 text-gray-600' />
                     )}
                     {wishlist.length > 0 && (
-                      <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg'>
+                      <span className='absolute top-3 right-4.2 text-white text-xs flex items-center justify-end font-bold text-shadow-lg'>
                         {wishlist.length > 99 ? '99+' : wishlist.length}
                       </span>
                     )}

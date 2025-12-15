@@ -1,50 +1,50 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* === LIGHT THEME — Elegant Pastel Violet === */
-:root {
-  --background: #ffffff;
-  --foreground: #0f0f0f;
+@layer theme {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f0f0f;
 
-  --gray-background: oklch(70.7% 0.022 261.325);
-  --gray-foreground: oklch(27.8% 0.033 256.848);
-  --primary: oklch(77.761% 0.08445 259.757);
-  --medium:var(--info);
-  --secondary: #8b5cf6;    /* purple */
-  --accent: #ec4899;       /* pink */
-  
-  --border: #d1d5db;       /* gray-300 */
-  --muted-foreground: #6b7280; /* gray-500 */
+    --gray-background: oklch(70.7% 0.022 261.325);
+    --gray-foreground: oklch(27.8% 0.033 256.848);
+    --primary: #7a7ef8f9;
+    --medium: var(--info);
+    --secondary: #8b5cf6; /* purple */
+    --accent: #ec4899; /* pink */
 
-  --success: #10b981;      /* green-500 */
-  --warning: #f59e0b;      /* amber-500 */
-  --danger:  #ef4444;      /* red-500 */
-  --info:    #3b82f6;      /* blue-500 */
+    --border: #d1d5db; /* gray-300 */
+    --muted-foreground: #6b7280; /* gray-500 */
+
+    --success: #10b981; /* green-500 */
+    --warning: #f59e0b; /* amber-500 */
+    --danger: #ef4444; /* red-500 */
+    --info: #3b82f6; /* blue-500 */
+  }
+
+  /* === DARK THEME — Elegant Deep Violet === */
+  html.dark {
+    --background: #111827;
+    --foreground: #f5f5f5;
+
+    --gray-background: #111827;
+    --gray-foreground: oklch(70.7% 0.022 261.325);
+    --primary: #606ad75f;
+    --secondary: #a78bfa; /* purple-400 */
+    --medium: red;
+    --accent: #f472b6; /* pink-400 */
+
+    --border: #4b5563; /* gray-600 */
+    --muted-foreground: #9ca3af; /* gray-400 */
+
+    --success: #34d399; /* green-400 */
+    --warning: #fbbf24; /* amber-400 */
+    --danger: #f87171; /* red-400 */
+    --info: #60a5fa; /* blue-400 */
+  }
 }
-
-
-/* === DARK THEME — Elegant Deep Violet === */
-.dark {
-  --background: #0f0f0f;
-  --foreground: #f5f5f5;
-
-  --gray-background: oklch(27.8% 0.033 256.848);
-  --gray-foreground: oklch(70.7% 0.022 261.325);
-  --primary: oklch(38.76% 0.06069 263.004);
-  --secondary: #a78bfa;   /* purple-400 */
-  --medium:red;
-  --accent: #f472b6;      /* pink-400 */
-
-  --border: #4b5563;      /* gray-600 */
-  --muted-foreground: #9ca3af; /* gray-400 */
-
-  --success: #34d399;     /* green-400 */
-  --warning: #fbbf24;     /* amber-400 */
-  --danger:  #f87171;     /* red-400 */
-  --info:    #60a5fa;     /* blue-400 */
-}
-
 
 @theme inline {
   --color-background: var(--background);
@@ -62,7 +62,10 @@
   --color-info: var(--info);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+@layer base {
+  html,
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
 }
