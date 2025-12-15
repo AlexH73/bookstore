@@ -10,7 +10,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { SearchProvider } from './contexts/SearchContext';
 import { store } from './app/store';
 import App from './App';
-import theme from './features/theme/theme';
+import theme from './features/theme/theme.ts';
 import './index.css';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { OrdersProvider } from './contexts/OrdersContext';
@@ -33,7 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Provider store={store}>
               <QueryClientProvider client={queryClient}>
                 <ThemeProvider theme={theme}>
-                  <CssBaseline />
                   <AuthProvider>
                     <App />
                   </AuthProvider>

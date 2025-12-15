@@ -208,14 +208,14 @@ const handleAddToCart = (book: Book) => {
 
           {/* Right side: Sort and view controls */}
           <div className='flex flex-col sm:flex-row gap-4'>
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-4'>
               <FormControl size='small' className='min-w-[150px]'>
-                <InputLabel className='dark:text-gray-400'>{t.sortBy}</InputLabel>
+                <InputLabel className='dark:text-gray-200'>{t.sortBy}</InputLabel>
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
                   label={t.sortBy}
-                  className='dark:bg-gray-700 dark:text-gray-200'
+                  className='dark:bg-gray-800'
                 >
                   <MenuItem value='title'>{t.sortOptions.title}</MenuItem>
                   <MenuItem value='price'>{t.sortOptions.price}</MenuItem>
