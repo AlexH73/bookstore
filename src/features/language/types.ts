@@ -134,6 +134,7 @@ export interface NavTranslations {
 }
 
 export interface HeaderTranslations {
+    categories: string;
     promo: string;
     storeLocator: string;
     helpContact: string;

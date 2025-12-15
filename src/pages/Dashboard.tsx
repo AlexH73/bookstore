@@ -85,25 +85,24 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div>
-              <h1 className='text-3xl font-bold'>
-                {t.welcomeMessage.replace(
-                  '{name}',
-                  user?.name || user?.email?.split('@')[0] || ''
-                )}
-              </h1>
-              <p className='opacity-80 mt-1'>
-                {t.memberSince}{' '}
-                {new Date().toLocaleDateString(getLocaleForDate(), {
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </p>
-            </div>
-          </div>
-
+        <h1 className='text-3xl font-bold text-gray-800 dark:text-white'>
+          {t.welcomeMessage.replace(
+            '{name}',
+            user?.name || user?.email?.split('@')[0] || ''
+          )}
+        </h1>
+        <p className='opacity-80 mt-1 text-gray-700 dark:text-white'>
+          {t.memberSince}{' '}
+          {new Date().toLocaleDateString(getLocaleForDate(), {
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
+      </div>
+    </div>
           <button
             onClick={handleLogout}
-            className='flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-lg transition-colors'
+            className='flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-white/20 dark:hover:bg-white/30 rounded-lg transition-colors text-gray-800 dark:text-white'
           >
             <Logout className='w-5 h-5' />
             <span>{t.logoutButton}</span>
