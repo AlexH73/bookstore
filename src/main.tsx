@@ -11,8 +11,9 @@ import { SearchProvider } from './contexts/SearchContext';
 import { store } from './app/store';
 import App from './App';
 import theme from './features/theme/theme';
-import './index.css'; 
+import './index.css';
 import { WishlistProvider } from './contexts/WishlistContext';
+import { OrdersProvider } from './contexts/OrdersContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,20 +27,22 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SearchProvider>
-      <WishlistProvider>
-        <BrowserRouter>
-          <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <AuthProvider>
-                  <App />
-                </AuthProvider>
-              </ThemeProvider>
-            </QueryClientProvider>
-          </Provider>
-        </BrowserRouter>
-      </WishlistProvider>
+      <OrdersProvider>
+        <WishlistProvider>
+          <BrowserRouter>
+            <Provider store={store}>
+              <QueryClientProvider client={queryClient}>
+                <ThemeProvider theme={theme}>
+                  <CssBaseline />
+                  <AuthProvider>
+                    <App />
+                  </AuthProvider>
+                </ThemeProvider>
+              </QueryClientProvider>
+            </Provider>
+          </BrowserRouter>
+        </WishlistProvider>
+      </OrdersProvider>
     </SearchProvider>
   </React.StrictMode>
 );

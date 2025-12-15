@@ -17,8 +17,9 @@ import {
 } from '@mui/icons-material';
 
 import { translations } from '../features/language/translations';
-import { useGetUserStatsQuery, useGetRecentOrdersQuery } from '../api/userApi';
+import { useGetUserStatsQuery } from '../api/userApi';
 import { useWishlist } from '../contexts/WishlistContext';
+import { useOrders } from '../contexts/OrdersContext';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -30,8 +31,9 @@ const Dashboard: React.FC = () => {
   const t = translations[currentLanguage].auth.dashboard;
 
   const { data: userStats } = useGetUserStatsQuery();
-  const { data: recentOrders } = useGetRecentOrdersQuery();
+  // const { data: recentOrders } = useGetRecentOrdersQuery(); // Deprecated
   const { wishlist } = useWishlist();
+  const { orders } = useOrders();
 
   const handleLogout = () => {
     logout();
@@ -54,7 +56,7 @@ const Dashboard: React.FC = () => {
     {
       icon: <ShoppingCart />,
       label: t.stats.orders,
-      value: userStats?.orders || 0,
+      value: orders.length,
       color: 'text-secondary',
     },
     {
@@ -149,9 +151,9 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className='p-6'>
-              {recentOrders && recentOrders.length > 0 ? (
+              {orders && orders.length > 0 ? (
                 <div className='space-y-4'>
-                  {recentOrders.map((order) => (
+                  {orders.slice(0, 3).map((order) => (
                     <div
                       key={order.id}
                       className='flex items-center justify-between p-4 rounded-xl hover:bg-muted transition-colors'
