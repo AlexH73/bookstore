@@ -137,6 +137,7 @@ export const en: Translations = {
       gifts: 'Gifts',
       sale: 'Sale',
     },
+    categories: ''
   },
   footer: {
     description:

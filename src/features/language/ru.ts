@@ -138,6 +138,7 @@ export const ru: Translations = {
       gifts: 'Подарки',
       sale: 'Распродажа',
     },
+    categories: ''
   },
   footer: {
     description:

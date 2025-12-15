@@ -138,6 +138,7 @@ export const de: Translations = {
       gifts: 'Geschenke',
       sale: 'im Angebot',
     },
+    categories: ''
   },
   footer: {
     description:
