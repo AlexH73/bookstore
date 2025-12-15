@@ -13,6 +13,7 @@ import BookPage from './pages/BookPage';
 import BookForm from './components/book/BookForm';
 import EditBook from './pages/EditBook';
 import Bestseller from './pages/Bestseller';
+import CartPage from "./pages/CartPage";
 
 
 const App: React.FC = () => {
@@ -127,6 +128,22 @@ const App: React.FC = () => {
           path='wishlist'
           element={<Navigate to='/catalog?wishlist=true' replace />}
         />
+        
+        <Route
+          path='/cart'
+          element={
+            <Suspense
+              fallback={
+                <div className='flex justify-center py-12'>
+                  <CircularProgress />
+                </div>
+              }
+            >
+              <CartPage />
+            </Suspense>
+          }
+        />
+       
 
         {/* Catch-all redirect */}
         <Route path='*' element={<Navigate to='/' replace />} />

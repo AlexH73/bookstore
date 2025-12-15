@@ -26,6 +26,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useWishlist } from "../../contexts/WishlistContext";
 //
 import { useBookCategories } from "../../app/hooks";
+import { selectCartItems } from "../../features/cart/cartSlice";
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,6 +46,9 @@ const Header: React.FC = () => {
   const t = translations[currentLanguage].header;
   const navigate = useNavigate();
   const location = useLocation();
+
+  const cartItems = useAppSelector(selectCartItems);
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
  // Закрыть dropdown, если кликнуть вне его
   useEffect(() => {
@@ -270,21 +274,15 @@ const Header: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Cart Button */}
-                <div className="relative group">
-                  <Link
-                    to="/cart"
-                    className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
-                  >
-                    <ShoppingCart className="w-6 h-6 dark:text-gray-300 text-gray-600" />
+                {/* Cart Button */}             
+                <Link to="/cart" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center">
+                  <ShoppingCart className="w-6 h-6 dark:text-gray-300 text-gray-600" />
+                  {cartCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg">
-                      3
+                      {cartCount > 99 ? "99+" : cartCount}
                     </span>
-                  </Link>
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                    Cart
-                  </div>
-                </div>
+                  )}
+                </Link>
 
                 {/* User Menu */}
                 {user?.isAuthenticated ? (
