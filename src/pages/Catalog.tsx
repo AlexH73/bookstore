@@ -394,7 +394,7 @@ const Catalog: React.FC = () => {
             {sortedBooks.map((book) => (
               <div
                 key={book.id}
-                className='bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-48 flex'
+                className='bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-54 flex'
               >
                 {/* Image - Left side */}
                 <div className='w-32 md:w-40 h-full shrink-0'>
