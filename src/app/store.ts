@@ -8,6 +8,7 @@ import { userApi } from '../api/userApi';
 import languageReducer from '../features/language/languageSlice';
 import themeReducer from '../features/theme/themeSlice';
 import authReducer from '../features/auth/authSlice';
+import cartReducer from "../features/cart/cartSlice";
 
 
 // ---------- Комбинируем все редьюсеры ----------
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   language: languageReducer,
   theme: themeReducer,
   auth: authReducer,
+  cart: cartReducer,
   [bookApi.reducerPath]: bookApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
 });

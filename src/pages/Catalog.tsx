@@ -12,6 +12,7 @@ import {
   Favorite,
   AddShoppingCart,
   Inventory,
+  ShoppingCart,
 } from '@mui/icons-material';
 import {
   Select,
@@ -33,6 +34,8 @@ import { useAppSelector } from '../app/hooks';
 import { translations } from '../features/language/translations';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppDispatch } from '../app/hooks';
+import { addToCart } from '../features/cart/cartSlice';
 
 const Catalog: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -117,10 +120,14 @@ const Catalog: React.FC = () => {
     setLocalSearchTerm('');
   };
 
-  const handleAddToCart = (book: Book) => {
-    console.log('Add to cart:', book);
-    // TODO: Implement add to cart logic
-  };
+const dispatch = useAppDispatch();
+
+const handleAddToCart = (book: Book) => {
+  if (!book || !book.stock || book.stock <= 0) return;
+  dispatch(addToCart(book));
+  console.log('Added to cart:', book);
+};
+
 
   // Функция для обработки добавления в wishlist с проверкой аутентификации
   const handleWishlistToggle = (book: Book) => {
@@ -499,15 +506,19 @@ const Catalog: React.FC = () => {
                         </span>
                       )}
                     </div>
-
-                    <button
-                      onClick={() => handleAddToCart(book)}
-                      disabled={!book.stock || book.stock <= 0}
-                      className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 dark:hover:bg-purple-700'
-                    >
-                      <AddShoppingCart className='w-5 h-5' />
-                      Add to Cart
-                    </button>
+                <button
+                  onClick={() => handleAddToCart(book)}
+                  disabled={!book.stock || book.stock <= 0}
+                  className={`bg-blue-600 text-white px-8 py-3 rounded-lg
+                    hover:bg-blue-700 transition-all
+                    active:scale-95 active:opacity-80
+                    flex items-center gap-2
+                    ${!book.stock || book.stock <= 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                  `}
+                >
+                  <ShoppingCart className='w-5 h-5' />
+                  Add to Cart
+                </button>
                   </div>
                 </div>
               </div>
