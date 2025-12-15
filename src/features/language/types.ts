@@ -199,6 +199,8 @@ export interface HomeTranslations {
         children: string;
         romance: string;
         fantasy: string;
+        epic: string;
+        play: string;
         mystery: string;
         biography: string;
         history: string;

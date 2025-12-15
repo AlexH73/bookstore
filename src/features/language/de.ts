@@ -196,6 +196,8 @@ export const de: Translations = {
       children: 'Kinder',
       romance: 'Romantik',
       fantasy: 'Fantasie',
+      epic: 'Episch',
+      play: 'Theaterstück',
       mystery: 'Geheimnis',
       biography: 'Biografie',
       history: 'Geschichte',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ArrowForward,
   LocalFireDepartment,
@@ -8,7 +8,11 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { translations } from '../features/language/translations';
 import BookCard from '../components/ui/BookCard';
-import { useGetBestsellersQuery } from '../api/bookApi';
+import {
+  useGetBestsellersQuery,
+  useGetBooksQuery,
+  useGetLocalBooksQuery,
+} from '../api/bookApi';
 import { type Book } from '../types/book';
 import { CircularProgress, Alert } from '@mui/material';
 import heroImage from '../assets/images/book_hero.jpeg';
@@ -21,53 +25,61 @@ const Home: React.FC = () => {
   const t = translations[currentLanguage].home;
 
   const { data: bestsellers = [], isLoading, error } = useGetBestsellersQuery();
+  const { data: apiBooks = [] } = useGetBooksQuery();
+  const { data: localBooks = [] } = useGetLocalBooksQuery();
 
   const homeBestsellers = bestsellers.slice(0, 4);
 
-  const categories = [
-    {
-      id: 'fiction',
-      name: t.categories.fiction,
-      count: 1254,
-      url: '/catalog?category=Fiction',
-      color: 'bg-blue-100 text-blue-800',
-    },
-    {
-      id: 'nonFiction',
-      name: t.categories.nonFiction,
-      count: 876,
-      url: '',
-      color: 'bg-green-100 text-green-800',
-    },
-    {
-      id: 'science',
-      name: t.categories.science,
-      count: 432,
-      url: '',
-      color: 'bg-purple-100 text-purple-800',
-    },
-    {
-      id: 'business',
-      name: t.categories.business,
-      count: 321,
-      url: '',
-      color: 'bg-yellow-100 text-yellow-800',
-    },
-    {
-      id: 'children',
-      name: t.categories.children,
-      count: 654,
-      url: '',
-      color: 'bg-pink-100 text-pink-800',
-    },
-    {
-      id: 'romance',
-      name: t.categories.romance,
-      count: 543,
-      url: '',
-      color: 'bg-red-100 text-red-800',
-    },
-  ];
+  const categories = useMemo(() => {
+    const allBooks = [...apiBooks, ...localBooks];
+    const getCategoryCount = (categoryName: string) =>
+      allBooks.filter((book) => book.category === categoryName).length;
+
+    return [
+      {
+        id: 'fiction',
+        name: t.categories.fiction,
+        count: getCategoryCount('Fiction'),
+        url: '/catalog?category=Fiction',
+        color: 'bg-blue-100 text-blue-800',
+      },
+      {
+        id: 'epic',
+        name: t.categories.epic,
+        count: getCategoryCount('Epic'),
+        url: '/catalog?category=Epic',
+        color: 'bg-green-100 text-green-800',
+      },
+      {
+        id: 'play',
+        name: t.categories.play,
+        count: getCategoryCount('Play'),
+        url: '/catalog?category=Play',
+        color: 'bg-purple-100 text-purple-800',
+      },
+      {
+        id: 'fantasy',
+        name: t.categories.fantasy,
+        count: getCategoryCount('Fantasy'),
+        url: '/catalog?category=Fantasy',
+        color: 'bg-yellow-100 text-yellow-800',
+      },
+      {
+        id: 'children',
+        name: t.categories.children,
+        count: getCategoryCount('Children'),
+        url: '/catalog?category=Children',
+        color: 'bg-pink-100 text-pink-800',
+      },
+      {
+        id: 'romance',
+        name: t.categories.romance,
+        count: getCategoryCount('Romance'),
+        url: '/catalog?category=Romance',
+        color: 'bg-red-100 text-red-800',
+      },
+    ];
+  }, [apiBooks, localBooks, t.categories]);
 
   return (
     <div className='space-y-12 md:space-y-16 text-gray-700 dark:bg-gray-900 dark:text-gray-400'>

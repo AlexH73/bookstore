@@ -196,6 +196,8 @@ export const ru: Translations = {
       children: 'Детские',
       romance: 'Романтика',
       fantasy: 'Фэнтези',
+      epic: 'Эпик',
+      play: 'Пьесы',
       mystery: 'Мистика',
       biography: 'Биография',
       history: 'История',
