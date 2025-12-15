@@ -125,14 +125,7 @@ const App: React.FC = () => {
 
         <Route
           path='wishlist'
-          element={
-            <ProtectedRoute>
-              <div className='container-custom py-8'>
-                <h1 className='text-3xl font-bold'>My Wishlist</h1>
-                <p>Wishlist page (coming soon)</p>
-              </div>
-            </ProtectedRoute>
-          }
+          element={<Navigate to='/catalog?wishlist=true' replace />}
         />
 
         {/* Catch-all redirect */}

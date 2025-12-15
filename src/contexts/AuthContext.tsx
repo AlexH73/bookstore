@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Функция для определения роли пользователя
   const determineUserRole = (email?: string): 'user' | 'admin' => {
     if (!email) return 'user';
-    
+
     // Администраторы по email
     const adminEmails = ['admin@bookstore.com', 'demo@bookstore.com'];
     return adminEmails.includes(email) ? 'admin' : 'user';
@@ -136,13 +136,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Сохранение в localStorage
       users[email] = { password, user: newUser };
       saveUsers(users);
-      
+
       // Сохраняем в auth_user с правильными данными
       const authUserData = {
         email: newUser.email,
         name: newUser.name,
         isAuthenticated: true,
-        role: newUser.role
+        role: newUser.role,
+        createdAt: newUser.createdAt,
       };
       saveAuthUser(authUserData);
 
@@ -182,13 +183,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Определяем роль пользователя
       const userRole = determineUserRole(email);
-      
+
       // Создаем объект для сохранения
       const authUserData = {
         email: userData.user.email,
         name: userData.user.name,
         isAuthenticated: true,
-        role: userRole
+        role: userRole,
+        createdAt: userData.user.createdAt,
       };
 
       // Успешный вход

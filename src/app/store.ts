@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { bookApi } from '../api/bookApi';
+import { userApi } from '../api/userApi';
 
 // Import existing reducers
 import languageReducer from '../features/language/languageSlice';
@@ -16,13 +17,14 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   auth: authReducer,
   [bookApi.reducerPath]: bookApi.reducer,
+  [userApi.reducerPath]: userApi.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
   whitelist: ['language', 'theme', 'user'],
-  blacklist: [bookApi.reducerPath], // Исключаем то, что не нужно сохранять
+  blacklist: [bookApi.reducerPath, userApi.reducerPath], // Исключаем то, что не нужно сохранять
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -34,7 +36,7 @@ export const store = configureStore({
   middleware: (getDefault) =>
     getDefault({
       serializableCheck: false,
-    }).concat(bookApi.middleware),
+    }).concat(bookApi.middleware).concat(userApi.middleware),
 });
 
 export const persistor = persistStore(store);
