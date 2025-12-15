@@ -29,36 +29,42 @@ const Home: React.FC = () => {
       id: 'fiction',
       name: t.categories.fiction,
       count: 1254,
+      url: '/catalog?category=Fiction',
       color: 'bg-blue-100 text-blue-800',
     },
     {
       id: 'nonFiction',
       name: t.categories.nonFiction,
       count: 876,
+      url: '',
       color: 'bg-green-100 text-green-800',
     },
     {
       id: 'science',
       name: t.categories.science,
       count: 432,
+      url: '',
       color: 'bg-purple-100 text-purple-800',
     },
     {
       id: 'business',
       name: t.categories.business,
       count: 321,
+      url: '',
       color: 'bg-yellow-100 text-yellow-800',
     },
     {
       id: 'children',
       name: t.categories.children,
       count: 654,
+      url: '',
       color: 'bg-pink-100 text-pink-800',
     },
     {
       id: 'romance',
       name: t.categories.romance,
       count: 543,
+      url: '',
       color: 'bg-red-100 text-red-800',
     },
   ];
@@ -79,9 +85,11 @@ const Home: React.FC = () => {
                   {t.shopNow}
                   <ArrowForward className='transform group-hover:translate-x-1 transition-transform' />
                 </button>
-                <button className='border-2 border-white dark:border-gray-500 text-white dark:text-blue-500 px-6 py-3 rounded-lg hover:bg-white/10 shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all cursor-pointer'>
-                  {t.viewBestsellers}
-                </button>
+                <form action='/bestseller'>
+                  <button className='border-2 border-white dark:border-gray-500 text-white dark:text-blue-500 px-6 py-3 rounded-lg hover:bg-white/10 shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all cursor-pointer'>
+                    {t.viewBestsellers}
+                  </button>
+                </form>
               </div>
             </div>
             <div className='hidden md:block px-18'>
@@ -109,22 +117,24 @@ const Home: React.FC = () => {
 
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4'>
           {categories.map((category) => (
-            <div
-              key={category.id}
-              className='card-hover bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all'
-            >
+            <Link to={category.url}>
               <div
-                className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${category.color} mb-3`}
+                key={category.id}
+                className='card-hover bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all'
               >
-                <span className='text-lg font-semibold'>
-                  {category.name.charAt(0)}
-                </span>
+                <div
+                  className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${category.color} mb-3`}
+                >
+                  <span className='text-lg font-semibold'>
+                    {category.name.charAt(0)}
+                  </span>
+                </div>
+                <h3 className='font-semibold mb-1'>{category.name}</h3>
+                <p className='text-sm text-gray-500'>
+                  {category.count} {t.books}
+                </p>
               </div>
-              <h3 className='font-semibold mb-1'>{category.name}</h3>
-              <p className='text-sm text-gray-500'>
-                {category.count} {t.books}
-              </p>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

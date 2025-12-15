@@ -33,11 +33,9 @@ const Bestseller: React.FC = () => {
   }
 
   return (
-    <div className='container-custom py-8 px-10'>
+    <div className='container-custom py-8 px-10 text-foreground'>
       <h1 className='text-4xl font-bold mb-2'>{t.title}</h1>
-      <p className='text-gray-600 mb-8'>
-        {t.subtitle}
-      </p>
+      <p className='text-muted-foreground mb-8'>{t.subtitle}</p>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
         {bestsellers.map((book: Book) => (
@@ -51,6 +49,7 @@ const Bestseller: React.FC = () => {
       </div>
     </div>
   );
+
 };
 
 export default Bestseller;
