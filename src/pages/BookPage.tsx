@@ -12,16 +12,16 @@ import {
 } from '@mui/icons-material';
 import { Button, Chip, Alert, CircularProgress } from '@mui/material';
 import { useGetBookByIdQuery } from '../api/bookApi';
-import { useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { translations } from '../features/language/translations';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useAuth } from '../contexts/AuthContext';
+import { addToCart } from '../features/cart/cartSlice';
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
-  // const [isFavorite, setIsFavorite] = useState(false);
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   const currentLanguage = useAppSelector(
@@ -32,9 +32,15 @@ const BookPage: React.FC = () => {
 
   const { data: book, isLoading, error } = useGetBookByIdQuery(id || '');
 
+  const dispatch = useAppDispatch();
+
   const handleAddToCart = () => {
-    console.log('Added to cart:', book);
-    // Cart logic will be implemented later
+    if (!book) return;
+    if (!user?.isAuthenticated) {
+      alert('Please login to add items to the cart');
+      return;
+    }
+    dispatch(addToCart(book));
   };
 
   const handleAddToWishlist = () => {
@@ -165,7 +171,15 @@ const BookPage: React.FC = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={!book.stock || book.stock <= 0}
-                className='bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
+                className={`
+                  bg-primary text-white px-8 py-3 rounded-lg 
+                  hover:bg-primary-dark 
+                  transition-all duration-150
+                  active:scale-95 active:opacity-80 
+                  ${!book.stock || book.stock <= 0 ? 'cursor-not-allowed' : 'cursor-pointer'}
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  flex items-center gap-2
+                `}
               >
                 <ShoppingCart />
                 {t.addToCart}

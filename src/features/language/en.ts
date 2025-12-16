@@ -137,6 +137,7 @@ export const en: Translations = {
       gifts: 'Gifts',
       sale: 'Sale',
     },
+    categories: ''
   },
   footer: {
     description:
@@ -193,6 +194,8 @@ export const en: Translations = {
       children: 'Children',
       romance: 'Romance',
       fantasy: 'Fantasy',
+      epic: 'Epic',
+      play: 'Play',
       mystery: 'Mystery',
       biography: 'Biography',
       history: 'History',

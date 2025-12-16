@@ -241,6 +241,26 @@ const BookForm: React.FC<BookFormProps> = ({
                 value={formik.values.category}
                 onChange={formik.handleChange}
                 label={`${tForm.labels.category} *`}
+               sx={{
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'light' ? '#fff' : '#1f2937',
+                  color: (theme) =>
+                    theme.palette.mode === 'light' ? '#111827' : '#f3f4f6',
+                  '.MuiSelect-icon': {
+                    color: (theme) =>
+                      theme.palette.mode === 'light' ? '#111827' : '#f3f4f6',
+                  },
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'light' ? '#fff' : '#1f2937',
+                      color: (theme) =>
+                        theme.palette.mode === 'light' ? '#111827' : '#f3f4f6',
+                    },
+                  },
+                }}
               >
                 {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>
@@ -343,6 +363,26 @@ const BookForm: React.FC<BookFormProps> = ({
                 value={formik.values.language}
                 onChange={formik.handleChange}
                 label={tForm.labels.language}
+                  sx={{
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'light' ? '#fff' : '#1f2937',
+                      color: (theme) =>
+                        theme.palette.mode === 'light' ? '#111827' : '#f3f4f6',
+                      '.MuiSelect-icon': {
+                        color: (theme) =>
+                          theme.palette.mode === 'light' ? '#111827' : '#f3f4f6',
+                      },
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === 'light' ? '#fff' : '#1f2937',
+                          color: (theme) =>
+                            theme.palette.mode === 'light' ? '#111827' : '#f3f4f6',
+                        },
+                      },
+                    }}
               >
                 {languages.map((lang) => (
                   <MenuItem key={lang} value={lang}>

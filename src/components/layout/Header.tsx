@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   Menu as MenuIcon,
   Login as LoginIcon,
@@ -11,28 +11,34 @@ import {
   LocalShipping,
   ArrowDropDown,
   Favorite,
-} from '@mui/icons-material';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { translations } from '../../features/language/translations';
+} from "@mui/icons-material";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { translations } from "../../features/language/translations";
 import {
   setLanguage,
   type Language,
-} from '../../features/language/languageSlice';
-import ThemeToggle from '../ui/ThemeToggle';
-import Logo from '../ui/Logo';
-import LanguageToggle from '../ui/LanguageToggle';
-import { useAuth } from '../../contexts/AuthContext';
-import { useWishlist } from '../../contexts/WishlistContext';
+} from "../../features/language/languageSlice";
+import ThemeToggle from "../ui/ThemeToggle";
+import Logo from "../ui/Logo";
+import LanguageToggle from "../ui/LanguageToggle";
+import { useAuth } from "../../contexts/AuthContext";
+import { useWishlist } from "../../contexts/WishlistContext";
+//
+import { useBookCategories } from "../../app/hooks";
+import { selectCartItems } from "../../features/cart/cartSlice";
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [, setUserMenuOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { user, logout } = useAuth();
   const { wishlist } = useWishlist();
 
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+  
   const dispatch = useAppDispatch();
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
@@ -41,14 +47,31 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const cartItems = useAppSelector(selectCartItems);
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+ // Закрыть dropdown, если кликнуть вне его
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
+        setMoreMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Синхронизируем поисковую строку с URL при навигации
   useEffect(() => {
-    if (location.pathname === '/catalog') {
+    if (location.pathname === "/catalog") {
       const params = new URLSearchParams(location.search);
-      const searchParam = params.get('search') || '';
+      const searchParam = params.get("search") || "";
       setSearchTerm(searchParam);
     } else {
-      setSearchTerm('');
+      setSearchTerm("");
     }
   }, [location]);
 
@@ -56,12 +79,11 @@ const Header: React.FC = () => {
     dispatch(setLanguage(lang));
   };
 
+  const { categories = [], isLoading } = useBookCategories();
+
   const navigationItems = [
-    { label: t.nav.bestseller, path: '/bestseller' },
-    { label: t.nav.catalog, path: '/catalog' },
-    { label: t.nav.fiction, path: '/catalog?category=Fiction' },
-    { label: t.nav.children, path: '/children?category=Children' },
-    { label: t.nav.gifts, path: '/gifts?category=Gifts' },
+    { label: t.nav.bestseller, path: "/bestseller" },
+    { label: t.nav.catalog, path: "/catalog" },
   ];
 
   const handleLogout = () => {
@@ -73,7 +95,7 @@ const Header: React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
-    localStorage.setItem('bookstore_search', term);
+    localStorage.setItem("bookstore_search", term);
   };
 
   // Обработчик отправки поискового запроса
@@ -131,8 +153,9 @@ const Header: React.FC = () => {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <nav className='hidden lg:flex gap-6 ml-8'>
-                  {navigationItems.slice(0, 4).map((item) => (
+                <nav className='hidden lg:flex gap-6 ml-8 items-center'>
+                  {/* Pamata linki */}
+                  {navigationItems.map((item) => (
                     <Link
                       key={item.label}
                       to={item.path}
@@ -142,10 +165,43 @@ const Header: React.FC = () => {
                       <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300'></span>
                     </Link>
                   ))}
-                  <button className='flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors group'>
-                    {t.more}
-                    <ArrowDropDown className='group-hover:rotate-180 transition-transform' />
-                  </button>
+
+                  {/* More dropdown */}
+                  <div className='relative' ref={moreMenuRef}>
+                    <button
+                      className='flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors group py-2'
+                      onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                    >
+                      {t.more}
+                      <ArrowDropDown
+                        className={`${
+                          moreMenuOpen ? 'rotate-180' : ''
+                        } transition-transform duration-200`}
+                      />
+                    </button>
+
+                    {/* Dropdown panel */}
+                    {moreMenuOpen && !isLoading && categories && (
+                      <div className='absolute top-full mt-1 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-md z-50 border border-gray-200 dark:border-gray-700 overflow-hidden'>
+                        <div className='p-2'>
+                          <h3 className='px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700'>
+                            {t.categories || 'Categories'}
+                          </h3>
+                          {categories.map((category) => (
+                            <Link
+                              key={category}
+                              to={`/catalog?category=${encodeURIComponent(
+                                category
+                              )}`}
+                              className='block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hover:text-primary dark:hover:text-primary'
+                            >
+                              {category}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </nav>
               </div>
 
@@ -155,7 +211,7 @@ const Header: React.FC = () => {
                 <div className='hidden md:flex items-center gap-3 mr-4'>
                   <div className='relative group'>
                     <ThemeToggle />
-                    <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
+                    <div className='absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
                       Theme
                     </div>
                   </div>
@@ -164,7 +220,7 @@ const Header: React.FC = () => {
                       currentLanguage={currentLanguage}
                       handleLanguageChange={handleLanguageChange}
                     />
-                    <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
+                    <div className='absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
                       Language
                     </div>
                   </div>
@@ -209,31 +265,25 @@ const Header: React.FC = () => {
                       <FavoriteBorder className='w-6 h-6 dark:text-gray-300 text-gray-600' />
                     )}
                     {wishlist.length > 0 && (
-                      <span className='absolute top-3 right-4.2 text-white text-xs flex items-center justify-end font-bold text-shadow-lg'>
-                        {wishlist.length > 99 ? '99+' : wishlist.length}
+                      <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold text-shadow-lg'>
+                        {wishlist.length > 9 ? '9+' : wishlist.length}
                       </span>
                     )}
                   </Link>
-                  <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
+                  <div className='absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
                     Wishlist
                   </div>
                 </div>
 
-                {/* Cart Button */}
-                <div className='relative group'>
-                  <Link
-                    to='/cart'
-                    className='relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center'
-                  >
-                    <ShoppingCart className='w-6 h-6 dark:text-gray-300 text-gray-600' />
-                    <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg'>
-                      3
+                {/* Cart Button */}             
+                <Link to="/cart" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center">
+                  <ShoppingCart className="w-6 h-6 dark:text-gray-300 text-gray-600" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg">
+                      {cartCount > 99 ? "99+" : cartCount}
                     </span>
-                  </Link>
-                  <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
-                    Cart
-                  </div>
-                </div>
+                  )}
+                </Link>
 
                 {/* User Menu */}
                 {user?.isAuthenticated ? (
@@ -244,7 +294,7 @@ const Header: React.FC = () => {
                     >
                       <Person className='w-6 h-6 dark:text-gray-300 text-gray-600' />
                     </Link>
-                    <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
+                    <div className='absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap'>
                       My Account
                     </div>
                   </div>
@@ -300,9 +350,7 @@ const Header: React.FC = () => {
             {/* Drawer */}
             <div className='absolute left-0 top-0 h-full w-76 bg-white dark:bg-gray-900 shadow-xl animate-slide-in-left'>
               <div className='flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800'>
-                <h2 className='text-xl font-bold text-foreground'>
-                  {t.menu}
-                </h2>
+                <h2 className='text-xl font-bold text-foreground'>{t.menu}</h2>
                 <button
                   onClick={() => setMobileOpen(false)}
                   className='p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg'
@@ -321,6 +369,29 @@ const Header: React.FC = () => {
                     {item.label}
                   </Link>
                 ))}
+
+                {/* Kategorijas mobile versijā */}
+                {!isLoading && categories && (
+                  <div className='mt-6'>
+                    <h3 className='text-lg font-medium text-gray-700 dark:text-gray-300 mb-3 px-2'>
+                      {t.categories || 'Categories'}
+                    </h3>
+                    <div className='space-y-1'>
+                      {categories.map((category) => (
+                        <Link
+                          key={category}
+                          to={`/catalog?category=${encodeURIComponent(
+                            category
+                          )}`}
+                          className='block px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors hover:text-primary dark:hover:text-primary'
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          {category}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Mobile Theme and Language */}
                 <div className='mt-6 pt-6 border-t border-gray-200 dark:border-gray-800'>

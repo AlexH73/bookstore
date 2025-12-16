@@ -138,6 +138,7 @@ export const de: Translations = {
       gifts: 'Geschenke',
       sale: 'im Angebot',
     },
+    categories: ''
   },
   footer: {
     description:
@@ -196,6 +197,8 @@ export const de: Translations = {
       children: 'Kinder',
       romance: 'Romantik',
       fantasy: 'Fantasie',
+      epic: 'Episch',
+      play: 'Theaterstück',
       mystery: 'Geheimnis',
       biography: 'Biografie',
       history: 'Geschichte',

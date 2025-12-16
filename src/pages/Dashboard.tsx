@@ -17,6 +17,9 @@ import {
 } from '@mui/icons-material';
 
 import { translations } from '../features/language/translations';
+import { useGetUserStatsQuery } from '../api/userApi';
+import { useWishlist } from '../contexts/WishlistContext';
+import { useOrders } from '../contexts/OrdersContext';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -26,6 +29,11 @@ const Dashboard: React.FC = () => {
   );
   // const { translationsAuth } = useAppSelector((state) => state.language);
   const t = translations[currentLanguage].auth.dashboard;
+
+  const { data: userStats } = useGetUserStatsQuery();
+  // const { data: recentOrders } = useGetRecentOrdersQuery(); // Deprecated
+  const { wishlist } = useWishlist();
+  const { orders } = useOrders();
 
   const handleLogout = () => {
     logout();
@@ -39,18 +47,28 @@ const Dashboard: React.FC = () => {
   };
 
   const stats = [
-    { icon: <Book />, label: t.stats.booksRead, value: '12', color: 'text-primary' },
+    {
+      icon: <Book />,
+      label: t.stats.booksRead,
+      value: userStats?.booksRead || 0,
+      color: 'text-primary'
+    },
     {
       icon: <ShoppingCart />,
       label: t.stats.orders,
-      value: '5',
+      value: orders.length,
       color: 'text-secondary',
     },
-    { icon: <Star />, label: t.stats.reviews, value: '8', color: 'text-warning' },
+    {
+      icon: <Star />,
+      label: t.stats.reviews,
+      value: userStats?.reviews || 0,
+      color: 'text-warning'
+    },
     {
       icon: <FavoriteBorder />,
       label: t.stats.wishlist,
-      value: '23',
+      value: wishlist.length,
       color: 'text-accent',
     },
   ];
@@ -58,7 +76,7 @@ const Dashboard: React.FC = () => {
   const quickActions = [
     { icon: <ShoppingCart />, label: t.quickActions.continueShopping, to: '/catalog' },
     { icon: <History />, label: t.quickActions.orderHistory, to: '/orders' },
-    { icon: <FavoriteBorder />, label: t.quickActions.myWishlist, to: '/wishlist' },
+    { icon: <FavoriteBorder />, label: t.quickActions.myWishlist, to: '/catalog?wishlist=true' },
     { icon: <Settings />, label: t.quickActions.accountSettings, to: '/settings' },
   ];
 
@@ -85,25 +103,24 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div>
-              <h1 className='text-3xl font-bold'>
+              <h1 className='text-3xl font-bold text-gray-800 dark:text-white'>
                 {t.welcomeMessage.replace(
                   '{name}',
                   user?.name || user?.email?.split('@')[0] || ''
                 )}
               </h1>
-              <p className='opacity-80 mt-1'>
+              <p className='opacity-80 mt-1 text-gray-700 dark:text-white'>
                 {t.memberSince}{' '}
-                {new Date().toLocaleDateString(getLocaleForDate(), {
+                {new Date(user?.createdAt || new Date()).toLocaleDateString(getLocaleForDate(), {
                   month: 'long',
                   year: 'numeric',
                 })}
               </p>
             </div>
           </div>
-
           <button
             onClick={handleLogout}
-            className='flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-lg transition-colors'
+            className='flex items-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-white/20 dark:hover:bg-white/30 rounded-lg transition-colors text-gray-800 dark:text-white'
           >
             <Logout className='w-5 h-5' />
             <span>{t.logoutButton}</span>
@@ -134,36 +151,42 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className='p-6'>
-              <div className='space-y-4'>
-                {[1, 2, 3].map((order) => (
-                  <div
-                    key={order}
-                    className='flex items-center justify-between p-4 rounded-xl hover:bg-muted transition-colors'
-                  >
-                    <div className='flex items-center gap-4'>
-                      <img
-                        src={`https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&h=150&fit=crop&${order}`}
-                        alt='Book'
-                        className='w-12 h-16 object-cover rounded-md'
-                      />
-                      <div>
-                        <h3 className='font-semibold'>
-                          {t.recentOrdersData.bookTitle} {order}
-                        </h3>
-                        <p className='text-sm text-muted-foreground'>
-                          {t.recentOrdersData.orderNumber} #ORD-2024-
-                          {1000 + order}
-                        </p>
+              {orders && orders.length > 0 ? (
+                <div className='space-y-4'>
+                  {orders.slice(0, 3).map((order) => (
+                    <div
+                      key={order.id}
+                      className='flex items-center justify-between p-4 rounded-xl hover:bg-muted transition-colors'
+                    >
+                      <div className='flex items-center gap-4'>
+                        <img
+                          src={order.items[0]?.image || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&h=150&fit=crop'}
+                          alt='Book'
+                          className='w-12 h-16 object-cover rounded-md'
+                        />
+                        <div>
+                          <h3 className='font-semibold'>
+                            {order.items[0]?.title || t.recentOrdersData.bookTitle}
+                            {order.items.length > 1 && ` +${order.items.length - 1}`}
+                          </h3>
+                          <p className='text-sm text-muted-foreground'>
+                            {t.recentOrdersData.orderNumber} #{order.id}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className='text-right'>
+                        <div className='font-bold'>€{order.total.toFixed(2)}</div>
+                        <div className={`text-sm ${order.status === 'delivered' ? 'text-success' : 'text-primary'}`}>{order.status}</div>
                       </div>
                     </div>
-
-                    <div className='text-right'>
-                      <div className='font-bold'>€{19.99 + order}</div>
-                      <div className='text-sm text-success'>{t.delivered}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  No orders yet
+                </div>
+              )}
 
               <button
                 onClick={() => navigate('/orders')}

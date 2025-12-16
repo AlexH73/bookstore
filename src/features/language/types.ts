@@ -134,6 +134,7 @@ export interface NavTranslations {
 }
 
 export interface HeaderTranslations {
+    categories: string;
     promo: string;
     storeLocator: string;
     helpContact: string;
@@ -199,6 +200,8 @@ export interface HomeTranslations {
         children: string;
         romance: string;
         fantasy: string;
+        epic: string;
+        play: string;
         mystery: string;
         biography: string;
         history: string;

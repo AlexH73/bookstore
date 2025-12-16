@@ -10,8 +10,8 @@ import {
   Star,
   FavoriteBorder,
   Favorite,
-  AddShoppingCart,
   Inventory,
+  ShoppingCart,
 } from '@mui/icons-material';
 import {
   Select,
@@ -33,6 +33,8 @@ import { useAppSelector } from '../app/hooks';
 import { translations } from '../features/language/translations';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppDispatch } from '../app/hooks';
+import { addToCart } from '../features/cart/cartSlice';
 
 const Catalog: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -54,7 +56,8 @@ const Catalog: React.FC = () => {
   const wishlistParam = queryParams.get('wishlist') === 'true'; 
 
   const [localSearchTerm, setLocalSearchTerm] = useState(searchParam);
-  const { wishlist, toggleWishlist, isInWishlist } = useWishlist();
+  const { wishlist, toggleWishlist, isInWishlist, clearWishlist } =
+    useWishlist();
 
   // Fetch data with RTK Query
   const {
@@ -117,10 +120,14 @@ const Catalog: React.FC = () => {
     setLocalSearchTerm('');
   };
 
-  const handleAddToCart = (book: Book) => {
-    console.log('Add to cart:', book);
-    // TODO: Implement add to cart logic
-  };
+const dispatch = useAppDispatch();
+
+const handleAddToCart = (book: Book) => {
+  if (!book || !book.stock || book.stock <= 0) return;
+  dispatch(addToCart(book));
+  console.log('Added to cart:', book);
+};
+
 
   // Функция для обработки добавления в wishlist с проверкой аутентификации
   const handleWishlistToggle = (book: Book) => {
@@ -201,14 +208,14 @@ const Catalog: React.FC = () => {
 
           {/* Right side: Sort and view controls */}
           <div className='flex flex-col sm:flex-row gap-4'>
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-4'>
               <FormControl size='small' className='min-w-[150px]'>
-                <InputLabel className='dark:text-gray-400'>{t.sortBy}</InputLabel>
+                <InputLabel className='dark:text-gray-200'>{t.sortBy}</InputLabel>
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
                   label={t.sortBy}
-                  className='dark:bg-gray-700 dark:text-gray-200'
+                  className='dark:bg-gray-800'
                 >
                   <MenuItem value='title'>{t.sortOptions.title}</MenuItem>
                   <MenuItem value='price'>{t.sortOptions.price}</MenuItem>
@@ -256,9 +263,8 @@ const Catalog: React.FC = () => {
                 variant='outlined'
                 color='error'
                 onClick={() => {
-                  // Можно добавить функцию очистки wishlist
                   if (window.confirm('Clear all items from wishlist?')) {
-                    // clearWishlist();
+                    clearWishlist();
                   }
                 }}
               >
@@ -355,7 +361,7 @@ const Catalog: React.FC = () => {
             className='bg-primary text-white text-lg py-2 px-4'
           />
 
-          {user && user.isAuthenticated && (
+          {user?.isAuthenticated && user.role === 'admin' && (
             <Link
               to='/books/add'
               className='bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 shadow-md hover:shadow-lg dark:hover:bg-purple-700'
@@ -499,15 +505,19 @@ const Catalog: React.FC = () => {
                         </span>
                       )}
                     </div>
-
-                    <button
-                      onClick={() => handleAddToCart(book)}
-                      disabled={!book.stock || book.stock <= 0}
-                      className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 dark:hover:bg-purple-700'
-                    >
-                      <AddShoppingCart className='w-5 h-5' />
-                      Add to Cart
-                    </button>
+                <button
+                  onClick={() => handleAddToCart(book)}
+                  disabled={!book.stock || book.stock <= 0}
+                  className={`bg-blue-600 text-white px-8 py-3 rounded-lg
+                    hover:bg-blue-700 transition-all
+                    active:scale-95 active:opacity-80
+                    flex items-center gap-2
+                    ${!book.stock || book.stock <= 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                  `}
+                >
+                  <ShoppingCart className='w-5 h-5' />
+                  Add to Cart
+                </button>
                   </div>
                 </div>
               </div>

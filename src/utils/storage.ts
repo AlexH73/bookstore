@@ -13,16 +13,18 @@ export interface AuthUser {
   token?: string;
   role: 'user' | 'admin';
   isAuthenticated: boolean;
+  createdAt?: string;
 }
 
 // Сохранение текущего пользователя
-export const saveAuthUser = (user: AuthUser | { email: string; name?: string; role?: 'user' | 'admin' }) => {
+export const saveAuthUser = (user: AuthUser | { email: string; name?: string; role?: 'user' | 'admin'; createdAt?: string }) => {
   const authData = {
     email: user.email,
     name: user.name,
     role: user.role,
     isAuthenticated: true,
     lastLogin: new Date().toISOString(),
+    createdAt: user.createdAt,
   };
   localStorage.setItem('auth_user', JSON.stringify(authData));
 };
@@ -39,6 +41,7 @@ export const getAuthUser = (): AuthUser | null => {
       name: parsed.name,
       role: parsed.role || 'user', // Default to 'user' if not specified
       isAuthenticated: parsed.isAuthenticated || false,
+      createdAt: parsed.createdAt,
     };
   } catch {
     return null;
