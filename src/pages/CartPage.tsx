@@ -2,15 +2,42 @@ import React from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { addToCart, decreaseQuantity, removeFromCart, clearCart } from "../features/cart/cartSlice";
 import { Button, Chip } from "@mui/material";
-import { ArrowBack, ShoppingCart } from "@mui/icons-material";
+import { ArrowBack, ShoppingCart, Payment } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useOrders } from "../contexts/OrdersContext";
+import type { Order } from "../types/order";
+import { userApi } from "../api/userApi";
 
 const CartPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const items = useAppSelector((state) => state.cart.items);
+  const { addOrder } = useOrders();
 
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleCheckout = () => {
+    const newOrder: Order = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      total: totalPrice,
+      status: 'processing',
+      items: items.map(item => ({
+        bookId: item.id,
+        title: item.title,
+        image: item.image,
+        price: item.price
+      }))
+    };
+
+    addOrder(newOrder);
+    dispatch(clearCart());
+
+    // Force refresh of UserStats in Dashboard
+    dispatch(userApi.util.invalidateTags(['UserStats']));
+
+    navigate('/dashboard');
+  };
 
   if (items.length === 0) {
     return (
@@ -97,11 +124,19 @@ const CartPage: React.FC = () => {
             Continue Shopping
           </Button>
           <Button
-            variant='contained'
+            variant='outlined'
             color='error'
             onClick={() => dispatch(clearCart())}
           >
             Clear Cart
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            startIcon={<Payment />}
+            onClick={handleCheckout}
+          >
+            Checkout
           </Button>
         </div>
       </div>
