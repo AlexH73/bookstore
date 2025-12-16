@@ -22,7 +22,6 @@ const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
-  // const [isFavorite, setIsFavorite] = useState(false);
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   const currentLanguage = useAppSelector(
@@ -42,7 +41,6 @@ const BookPage: React.FC = () => {
       return;
     }
     dispatch(addToCart(book));
-    console.log('Added to cart:', book.title);
   };
 
   const handleAddToWishlist = () => {

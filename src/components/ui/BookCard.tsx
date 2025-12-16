@@ -14,10 +14,12 @@ import { useWishlist } from "../../contexts/WishlistContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { type Book } from "../../types/book";
 import { useDeleteLocalBookMutation } from "../../api/bookApi";
+import { useAppDispatch } from '../../app/hooks';
+import { addToCart } from '../../features/cart/cartSlice';
 
 interface BookCardProps {
   book: {
-    id: string | number;
+    id: string;
     title: string;
     author: string;
     price: number;
@@ -35,7 +37,7 @@ interface BookCardProps {
   onToggleFavorite?: (book: any) => void;
 }
 
-const BookCard: React.FC<BookCardProps> = ({ book, onAddToCart }) => {
+const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const currentLanguage = useAppSelector(
     (state) => state.language.currentLanguage
   );
@@ -44,19 +46,21 @@ const BookCard: React.FC<BookCardProps> = ({ book, onAddToCart }) => {
   const { user } = useAuth();
 
   const { isInWishlist, toggleWishlist, removeFromWishlist } = useWishlist();
-
+const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [deleteBook] = useDeleteLocalBookMutation();
 
   const bookIdString = String(book.id);
-
-  const handleAddToCart = () => {
-    if (!user?.isAuthenticated) {
-      alert("Please login to add items to cart");
-      return;
-    }
-    onAddToCart?.(book);
-  };
+  
+    const handleAddToCart = () => {
+      if (!book) return;
+      if (!user?.isAuthenticated) {
+        alert('Please login to add items to the cart');
+        return;
+      }
+      dispatch(addToCart(book));
+      console.log('Added to cart:', book.title);
+    };
 
   // Создаем объект книги с id как string для wishlist
   const getBookForWishlist = (): Book => ({

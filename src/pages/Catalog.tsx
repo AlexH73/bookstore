@@ -10,7 +10,6 @@ import {
   Star,
   FavoriteBorder,
   Favorite,
-  AddShoppingCart,
   Inventory,
   ShoppingCart,
 } from '@mui/icons-material';
@@ -57,7 +56,8 @@ const Catalog: React.FC = () => {
   const wishlistParam = queryParams.get('wishlist') === 'true'; 
 
   const [localSearchTerm, setLocalSearchTerm] = useState(searchParam);
-  const { wishlist, toggleWishlist, isInWishlist } = useWishlist();
+  const { wishlist, toggleWishlist, isInWishlist, clearWishlist } =
+    useWishlist();
 
   // Fetch data with RTK Query
   const {
@@ -263,9 +263,8 @@ const handleAddToCart = (book: Book) => {
                 variant='outlined'
                 color='error'
                 onClick={() => {
-                  // Можно добавить функцию очистки wishlist
                   if (window.confirm('Clear all items from wishlist?')) {
-                    // clearWishlist();
+                    clearWishlist();
                   }
                 }}
               >
