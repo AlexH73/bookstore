@@ -230,7 +230,7 @@ export const de: Translations = {
     viewGrid: 'Rasteransicht',
     viewList: 'Listenansicht',
     resetFilters: 'Filter zurücksetzen',
-    foundBooks: '{count} Bücher gefunden',
+    foundBooks: ' {count} {books} gefunden',
     noBooksFound: 'Keine Bücher gefunden',
     addNewBook: 'Buch hinzufügen',
     error: 'Fehler beim Laden der Bücher',

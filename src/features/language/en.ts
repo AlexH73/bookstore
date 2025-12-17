@@ -227,7 +227,7 @@ export const en: Translations = {
     viewGrid: 'Grid View',
     viewList: 'List View',
     resetFilters: 'Reset Filters',
-    foundBooks: 'Found {count} books',
+    foundBooks: 'Found  {count} {books}',
     noBooksFound: 'No books found matching your criteria',
     addNewBook: 'Add New Book',
     error: 'Error loading books from API',

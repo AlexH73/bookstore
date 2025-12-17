@@ -231,7 +231,7 @@ export const ru: Translations = {
     viewGrid: 'Сетка',
     viewList: 'Список',
     resetFilters: 'Сбросить фильтры',
-    foundBooks: 'Найдено {count} книг',
+    foundBooks: 'Найдено {count} {books}',
     noBooksFound: 'Книги не найдены',
     addNewBook: 'Добавить книгу',
     error: 'Ошибка загрузки книг из API',
