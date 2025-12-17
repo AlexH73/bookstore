@@ -152,6 +152,7 @@ const Login: React.FC = () => {
               ),
             }}
             sx={{
+              mb: 2,
               '& .MuiInputBase-root': {
                 color: 'var(--foreground)',
               },
@@ -209,6 +210,7 @@ const Login: React.FC = () => {
               }
               label={t.passwordLabel}
               sx={{
+                mb: 2,
                 color: 'var(--foreground)',
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'var(--border)',
@@ -231,12 +233,17 @@ const Login: React.FC = () => {
                 type='checkbox'
                 className='h-4 w-4 text-primary border-border rounded focus:ring-primary'
               />
-              <label htmlFor='remember' className='text-sm text-muted-foreground'>
+              <label
+                htmlFor='remember'
+                className='text-sm text-muted-foreground'
+              >
                 {t.rememberMe}
               </label>
             </div>
             <div className='text-sm'>
-              <Link to='#' className='font-medium text-primary hover:underline'>{t.forgotPasswordLink}</Link>
+              <Link to='#' className='font-medium text-primary hover:underline'>
+                {t.forgotPasswordLink}
+              </Link>
             </div>
           </div>
 

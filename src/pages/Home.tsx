@@ -15,7 +15,7 @@ import {
 } from '../api/bookApi';
 import { type Book } from '../types/book';
 import { CircularProgress, Alert } from '@mui/material';
-import heroImage from '../assets/images/book_hero.jpeg';
+import heroImage from '../assets/images/book_hero.png';
 import readingImage from '../assets/images/reading.jpeg';
 
 const Home: React.FC = () => {
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
                   <ArrowForward className='transform group-hover:translate-x-1 transition-transform' />
                 </button>
                 <form action='/bestseller'>
-                  <button className='border-2 border-white dark:border-gray-500 text-white dark:text-blue-500 px-6 py-3 rounded-lg hover:bg-white/10 shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all cursor-pointer'>
+                  <button className='border-2 border-white dark:border-gray-500 text-gray-800 dark:text-blue-500 px-6 py-3 rounded-lg hover:bg-white/10 shadow-sm hover:shadow-lg hover:shadow-blue-300/50 dark:hover:shadow-blue-600/50 transition-all active:scale-95 cursor-pointer'>
                     {t.viewBestsellers}
                   </button>
                 </form>
@@ -109,7 +109,7 @@ const Home: React.FC = () => {
                 <img
                   src={`${heroImage}`}
                   alt='Books Collection'
-                  className='rounded-2xl shadow-2xl'
+                  className='rounded-2xl'
                 />
               </div>
             </div>

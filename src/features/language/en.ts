@@ -137,7 +137,7 @@ export const en: Translations = {
       gifts: 'Gifts',
       sale: 'Sale',
     },
-    categories: ''
+    categories: '',
   },
   footer: {
     description:
@@ -203,7 +203,13 @@ export const en: Translations = {
   },
   catalog: {
     title: 'Book Catalog',
+    wTitle: 'My Wishlist',
     totalBooks: 'Total books',
+    wSBooks: {
+      one: 'book',
+      other: 'books',
+    },
+    wishlist: 'in wishlist',
     searchPlaceholder: 'Search books, authors, categories...',
     sortBy: 'Sort By',
     sortOptions: {
@@ -221,7 +227,7 @@ export const en: Translations = {
     viewGrid: 'Grid View',
     viewList: 'List View',
     resetFilters: 'Reset Filters',
-    foundBooks: 'Found {count} books',
+    foundBooks: 'Found  {count} {books}',
     noBooksFound: 'No books found matching your criteria',
     addNewBook: 'Add New Book',
     error: 'Error loading books from API',

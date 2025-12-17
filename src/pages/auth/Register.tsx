@@ -241,6 +241,7 @@ const Register: React.FC = () => {
               }
               label={t.passwordLabel}
               sx={{
+                mb: 3,
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'var(--border)',
                 },
@@ -259,7 +260,9 @@ const Register: React.FC = () => {
           {formData.password && (
             <div className='space-y-3'>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>{t.passwordStrength}</span>
+                <span className='text-muted-foreground'>
+                  {t.passwordStrength}
+                </span>
                 <span
                   className='font-medium'
                   style={{ color: getStrengthColor() }}
@@ -267,8 +270,8 @@ const Register: React.FC = () => {
                   {passwordStrength >= 75
                     ? t.strength.strong
                     : passwordStrength >= 50
-                      ? t.strength.medium
-                      : t.strength.weak}
+                    ? t.strength.medium
+                    : t.strength.weak}
                 </span>
               </div>
 
@@ -322,6 +325,7 @@ const Register: React.FC = () => {
               }
               label={t.confirmPasswordLabel}
               sx={{
+                mb: 2,
                 color: 'var(--foreground)',
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'var(--border)',

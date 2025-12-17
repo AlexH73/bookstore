@@ -348,7 +348,7 @@ const Header: React.FC = () => {
             />
 
             {/* Drawer */}
-            <div className='absolute left-0 top-0 h-full w-76 bg-white dark:bg-gray-900 shadow-xl animate-slide-in-left'>
+            <div className='absolute left-0 top-0 h-full w-76 bg-white dark:bg-gray-900 shadow-xl animate-slide-in-left z-50'>
               <div className='flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800'>
                 <h2 className='text-xl font-bold text-foreground'>{t.menu}</h2>
                 <button

@@ -138,7 +138,7 @@ export const de: Translations = {
       gifts: 'Geschenke',
       sale: 'im Angebot',
     },
-    categories: ''
+    categories: '',
   },
   footer: {
     description:
@@ -206,7 +206,13 @@ export const de: Translations = {
   },
   catalog: {
     title: 'Buchkatalog',
+    wTitle: 'Meine Wunschliste',
     totalBooks: 'Gesamtbücher',
+    wSBooks: {
+      one: 'Buch',
+      other: 'Bücher',
+    },
+    wishlist: 'auf der Wunschliste',
     searchPlaceholder: 'Bücher, Autoren, Kategorien suchen...',
     sortBy: 'Sortieren nach',
     sortOptions: {
@@ -224,7 +230,7 @@ export const de: Translations = {
     viewGrid: 'Rasteransicht',
     viewList: 'Listenansicht',
     resetFilters: 'Filter zurücksetzen',
-    foundBooks: '{count} Bücher gefunden',
+    foundBooks: ' {count} {books} gefunden',
     noBooksFound: 'Keine Bücher gefunden',
     addNewBook: 'Buch hinzufügen',
     error: 'Fehler beim Laden der Bücher',
