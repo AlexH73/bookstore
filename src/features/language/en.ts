@@ -137,7 +137,7 @@ export const en: Translations = {
       gifts: 'Gifts',
       sale: 'Sale',
     },
-    categories: ''
+    categories: '',
   },
   footer: {
     description:
@@ -203,7 +203,13 @@ export const en: Translations = {
   },
   catalog: {
     title: 'Book Catalog',
+    wTitle: 'My Wishlist',
     totalBooks: 'Total books',
+    wSBooks: {
+      one: 'book',
+      other: 'books',
+    },
+    wishlist: 'in wishlist',
     searchPlaceholder: 'Search books, authors, categories...',
     sortBy: 'Sort By',
     sortOptions: {

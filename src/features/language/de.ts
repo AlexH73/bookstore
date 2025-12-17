@@ -138,7 +138,7 @@ export const de: Translations = {
       gifts: 'Geschenke',
       sale: 'im Angebot',
     },
-    categories: ''
+    categories: '',
   },
   footer: {
     description:
@@ -206,7 +206,13 @@ export const de: Translations = {
   },
   catalog: {
     title: 'Buchkatalog',
+    wTitle: 'Meine Wunschliste',
     totalBooks: 'Gesamtbücher',
+    wSBooks: {
+      one: 'Buch',
+      other: 'Bücher',
+    },
+    wishlist: 'auf der Wunschliste',
     searchPlaceholder: 'Bücher, Autoren, Kategorien suchen...',
     sortBy: 'Sortieren nach',
     sortOptions: {

@@ -35,6 +35,7 @@ import { useWishlist } from '../contexts/WishlistContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppDispatch } from '../app/hooks';
 import { addToCart } from '../features/cart/cartSlice';
+import { getFoundBooksText, pluralRu, pluralSimple } from '../utils/plural';
 
 const Catalog: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -53,7 +54,7 @@ const Catalog: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const searchParam = queryParams.get('search') || '';
   const categoryParam = queryParams.get('category') || '';
-  const wishlistParam = queryParams.get('wishlist') === 'true'; 
+  const wishlistParam = queryParams.get('wishlist') === 'true';
 
   const [localSearchTerm, setLocalSearchTerm] = useState(searchParam);
   const { wishlist, toggleWishlist, isInWishlist, clearWishlist } =
@@ -120,14 +121,13 @@ const Catalog: React.FC = () => {
     setLocalSearchTerm('');
   };
 
-const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-const handleAddToCart = (book: Book) => {
-  if (!book || !book.stock || book.stock <= 0) return;
-  dispatch(addToCart(book));
-  console.log('Added to cart:', book);
-};
-
+  const handleAddToCart = (book: Book) => {
+    if (!book || !book.stock || book.stock <= 0) return;
+    dispatch(addToCart(book));
+    console.log('Added to cart:', book);
+  };
 
   // Функция для обработки добавления в wishlist с проверкой аутентификации
   const handleWishlistToggle = (book: Book) => {
@@ -163,12 +163,24 @@ const handleAddToCart = (book: Book) => {
     <div className='container-custom py-8 px-4 md:px-6 lg:px-8'>
       {/* Header */}
       <div className='mb-8'>
-        <h1 className='text-4xl font-bold mb-2 dark:text-gray-200'>
-          {wishlistParam ? 'My Wishlist' : t.title}
+        <h1 className='text-4xl py-1 font-bold mb-2 bg-linear-to-b from-blue-600 to-purple-600 bg-clip-text text-transparent'>
+          {wishlistParam ? t.wTitle : t.title}
         </h1>
         <p className='text-gray-600 dark:text-gray-400'>
           {wishlistParam
-            ? `${wishlist.length} books in wishlist`
+            ? (() => {
+                const count = wishlist.length;
+
+                if (currentLanguage === 'ru') {
+                  return `${count} ${pluralRu(count, t.wRBooks!)} ${
+                    t.wishlist
+                  }`;
+                }
+
+                return `${count} ${pluralSimple(count, t.wSBooks!)} ${
+                  t.wishlist
+                }`;
+              })()
             : `${t.totalBooks}: ${allBooks.length}`}
         </p>
       </div>
@@ -180,7 +192,9 @@ const handleAddToCart = (book: Book) => {
           <div className='flex items-center gap-4'>
             <div className='flex items-center gap-2'>
               <FilterList className='text-primary' />
-              <h3 className='font-semibold text-lg dark:text-gray-200'>{t.filters.title}</h3>
+              <h3 className='font-semibold text-lg dark:text-gray-200'>
+                {t.filters.title}
+              </h3>
             </div>
 
             <Button
@@ -210,7 +224,9 @@ const handleAddToCart = (book: Book) => {
           <div className='flex flex-col sm:flex-row gap-4'>
             <div className='flex items-center gap-4'>
               <FormControl size='small' className='min-w-[150px]'>
-                <InputLabel className='dark:text-gray-200'>{t.sortBy}</InputLabel>
+                <InputLabel className='dark:text-gray-200'>
+                  {t.sortBy}
+                </InputLabel>
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
@@ -280,7 +296,9 @@ const handleAddToCart = (book: Book) => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
               {/* Categories */}
               <div>
-                <h4 className='font-medium mb-3 dark:text-gray-300'>{t.filters.categories}</h4>
+                <h4 className='font-medium mb-3 dark:text-gray-300'>
+                  {t.filters.categories}
+                </h4>
                 <div className='flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1'>
                   {categories.map((category) => (
                     <button
@@ -300,7 +318,9 @@ const handleAddToCart = (book: Book) => {
 
               {/* Price Range */}
               <div>
-                <h4 className='font-medium mb-3 dark:text-gray-300'>{t.filters.priceRange}</h4>
+                <h4 className='font-medium mb-3 dark:text-gray-300'>
+                  {t.filters.priceRange}
+                </h4>
                 <div className='px-2'>
                   <Slider
                     value={priceRange}
@@ -323,17 +343,25 @@ const handleAddToCart = (book: Book) => {
 
               {/* Stats */}
               <div>
-                <h4 className='font-medium mb-3 dark:text-gray-300'>Statistics</h4>
+                <h4 className='font-medium mb-3 dark:text-gray-300'>
+                  Statistics
+                </h4>
                 <div className='grid grid-cols-2 gap-3'>
                   <div className='bg-gray-50 dark:bg-gray-900 p-3 rounded-lg'>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>Showing</p>
-                    <p className='text-2xl font-bold dark:text-gray-200'>{sortedBooks.length}</p>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                      Showing
+                    </p>
+                    <p className='text-2xl font-bold dark:text-gray-200'>
+                      {sortedBooks.length}
+                    </p>
                     <p className='text-xs text-gray-500 dark:text-gray-400'>
                       of {allBooks.length} books
                     </p>
                   </div>
                   <div className='bg-gray-50 dark:bg-gray-900 p-3 rounded-lg'>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>Average Price</p>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                      Average Price
+                    </p>
                     <p className='text-2xl font-bold dark:text-gray-200'>
                       €
                       {(
@@ -341,7 +369,9 @@ const handleAddToCart = (book: Book) => {
                         Math.max(allBooks.length, 1)
                       ).toFixed(2)}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>per book</p>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                      per book
+                    </p>
                   </div>
                 </div>
               </div>
@@ -354,11 +384,22 @@ const handleAddToCart = (book: Book) => {
       <div className='mb-6'>
         <div className='flex justify-between items-center mb-4'>
           <Chip
-            label={t.foundBooks.replace(
-              '{count}',
-              sortedBooks.length.toString()
-            )}
-            className='bg-primary text-white text-lg py-2 px-4'
+            label={getFoundBooksText(sortedBooks.length, t, currentLanguage)}
+            sx={(theme) => ({
+              fontWeight: 500,
+              borderRadius: 2,
+
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[800]
+                  : theme.palette.grey[200],
+
+              color:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+            })}
+            className='text-lg py-2 px-4'
           />
 
           {user?.isAuthenticated && user.role === 'admin' && (
@@ -373,7 +414,9 @@ const handleAddToCart = (book: Book) => {
 
         {sortedBooks.length === 0 ? (
           <div className='text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl'>
-            <p className='text-gray-500 dark:text-gray-400 text-lg mb-4'>{t.noBooksFound}</p>
+            <p className='text-gray-500 dark:text-gray-400 text-lg mb-4'>
+              {t.noBooksFound}
+            </p>
             <Button
               variant='contained'
               onClick={resetFilters}
@@ -434,7 +477,7 @@ const handleAddToCart = (book: Book) => {
                         className='text-gray-400 hover:text-red-500 dark:hover:text-red-400'
                       >
                         {isInWishlist(book.id.toString()) ? (
-                          <Favorite className="text-red-500" />
+                          <Favorite className='text-red-500' />
                         ) : (
                           <FavoriteBorder />
                         )}
@@ -505,19 +548,23 @@ const handleAddToCart = (book: Book) => {
                         </span>
                       )}
                     </div>
-                <button
-                  onClick={() => handleAddToCart(book)}
-                  disabled={!book.stock || book.stock <= 0}
-                  className={`bg-blue-600 text-white px-8 py-3 rounded-lg
+                    <button
+                      onClick={() => handleAddToCart(book)}
+                      disabled={!book.stock || book.stock <= 0}
+                      className={`bg-blue-600 text-white px-8 py-3 rounded-lg
                     hover:bg-blue-700 transition-all
                     active:scale-95 active:opacity-80
                     flex items-center gap-2
-                    ${!book.stock || book.stock <= 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                    ${
+                      !book.stock || book.stock <= 0
+                        ? 'cursor-not-allowed opacity-50'
+                        : 'cursor-pointer'
+                    }
                   `}
-                >
-                  <ShoppingCart className='w-5 h-5' />
-                  Add to Cart
-                </button>
+                    >
+                      <ShoppingCart className='w-5 h-5' />
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
               </div>

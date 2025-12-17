@@ -138,7 +138,7 @@ export const ru: Translations = {
       gifts: 'Подарки',
       sale: 'Распродажа',
     },
-    categories: ''
+    categories: '',
   },
   footer: {
     description:
@@ -206,7 +206,14 @@ export const ru: Translations = {
   },
   catalog: {
     title: 'Каталог книг',
+    wTitle: 'Мои фавориты',
     totalBooks: 'Всего книг',
+    wRBooks: {
+      one: 'книга',
+      few: 'книги',
+      many: 'книг',
+    },
+    wishlist: 'в списке желаний',
     searchPlaceholder: 'Поиск книг, авторов, категорий...',
     sortBy: 'Сортировать по',
     sortOptions: {
@@ -326,3 +333,4 @@ export const ru: Translations = {
     },
   },
 };
+
